@@ -1,34 +1,36 @@
 # Data Sanity Check
 
-List of things to check:
-1. text
-2. images
+### Absence of data might be due to
+
+External factors:
+
+- the journal stopped to be published for some years/months/days
+- publication periodicity
+
+Preservation factors:
+
+- paper copies were lost and never digitized
+- digital copies were lost
 
 
+### To check
 
+***Text/Images***  
+ 
+- for each text page, there should be a corresponding image
+- for each article, there should be text
 
-### For a collection:
+***Olive***   
 
-#### detecting holes (absence of data)
-
-***Years***   
-first year - last year => theoretical number of years   
-number of year folder  => real number of years   
-
-***Months***  
-Each year should have 12 months.
-
-***Days***  
-Depend on publication, not possible to check for now.
-
-#### detecting holes (missing data)**
-
-Many things.
-
-Shall we pre-compute the overview, or have queries?
-
-For Olive:
-- check presence of pdf file per issue
+- check the presence/absence of issue pdfs
+- check the presence/absence of page pdfs
 - check presence of .zip per issue
+- if not tifs, check presence of png
 
+### Mapping the coverage
 
+In the DB, store information so as to be able to (among others):
+
+- detect missing/absent years of a journal
+- detect missing/absent months of a year
+- detect missing/absent days of a month
