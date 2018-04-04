@@ -55,7 +55,7 @@ In the DB, store information so as to be able to (among others):
 
 2. cross-check on generated canonical data, assuming that 1) was fine.
 
-**Isolated check images**
+**Isolated check on images**
 - detect corrupted archives
 - overview of image format per journal, counts based on issues.
 - per journal, total sum of jp2 file size
@@ -65,7 +65,7 @@ Goes in the DB:
 - in the journal table, how many images comes tif/png/jpg + %
 
 
-**Isolated check text**
+**Isolated check on text**
 
 - check pages without OCR (empty regions)
 - corrupted archives
