@@ -1,0 +1,28 @@
+======= REPORT for TESTIMGCANOTWO ======
+
+**** CASE: issues w/o jp2 (1) **** 
+TESTIMGCANOTWO/1900/01/13/a
+
+**** CASE: issues w/ incorrect # infofile (0) **** 
+
+**** CASE: pages w/o jp2 (1) **** 
+TESTIMGCANOTWO/1900/01/11/9
+
+**** CASE: issues w/o infofile (1) **** 
+TESTIMGCANOTWO/1900/01/12/a
+
+**** CASE: infofile w/ incorrect # img (1) **** 
+TESTIMGCANOTWO/1900/01/11/a/1900-01-11-a-image-info.txt
+
+**** CASE: jp2 w/ incorrect filename (0) **** 
+
+**** CASE: jp2 w/o journalname (2) **** 
+TESTIMGCANOTWO/1900/01/11/a/JDG-1900-01-11-a-p0001.jp2
+TESTIMGCANOTWO/1900/01/11/a/GDL-1900-01-11-a-p0001.jp2
+
+**** CASE: infofile w/o journalname (1) **** 
+TESTIMGCANOTWO/1900/01/13/a/TESTIMGCANO2-1900-01-13-a-image-info.txt
+
+**** CASE: jp2 w/ incorrect date (0) **** 
+
+**** CASE: infofile w/ incorrect date (0) **** 

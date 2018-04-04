@@ -1,0 +1,3 @@
+JOURNAL , number original issues , number canonical issues , number recognized pairs , issues w/o zip , issues w/ corruptedzip , issues w/o jp2 , issues w/ incorrect # infofile , pages w/o jp2 , issues w/o infofile , infofile w/ incorrect # img , jp2 w/ incorrect filename , jp2 w/o journalname , infofile w/o journalname , jp2 w/ incorrect date , infofile w/ incorrect date , number tif , number png , number jpg , total size jp2 , number original page folders , number canonical jp2
+TESTIMGCANOONE, 5, 5, 5, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 8, 8, 0, 214.6 MB, 21, 20, 
+TESTIMGCANOTWO, 5, 5, 5, 0, 0, 1, 0, 1, 1, 1, 0, 2, 1, 0, 0, 8, 8, 0, 237.5 MB, 21, 21, 

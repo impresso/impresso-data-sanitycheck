@@ -1,0 +1,28 @@
+======= REPORT for ORIGTEST ======
+
+**** CASE: issues w/o zip (1) **** 
+ORIGTEST/1930/06/11
+
+**** CASE: issues w/ corruptedzip (1) **** 
+ORIGTEST/1881/02/26
+
+**** CASE: issues_homogeneouscoverage_tifs (1) **** 
+ORIGTEST/1900/01/10
+
+**** CASE: issues_homogeneouscoverage_pngs (1) **** 
+ORIGTEST/1900/01/11
+
+**** CASE: issues_homogeneouscoverage_jpgs (1) **** 
+ORIGTEST/1900/01/12
+
+**** CASE: issues_homogeneouscoverage_singlepngs (0) **** 
+
+**** CASE: issues_heterocoverage_all (0) **** 
+
+**** CASE: issues_heterocoverage_tif_png (0) **** 
+
+**** CASE: issues_heterocoverage_tif_jpg (0) **** 
+
+**** CASE: issues_heterocoverage_png_jpg (0) **** 
+
+**** CASE: issues_missing_pageimg (0) **** 
