@@ -101,6 +101,7 @@ class OriginalJournalStats(Enum):
     issues_missing_small_pdfs = 'issues w/o small pdfs'  # one pdf per page
     issues_missing_both_pdfs = 'issues w/o both pdfs'  # one pdf per page
     issues_having_both_pdfs = 'issues w both pdfs'  # one pdf per page
+    number_pages = "number of pages"
 
 
 def init_logger(mylogger, log_level, log_file):
@@ -209,6 +210,8 @@ def check_canonical_issue(issue_dir_original, issue_dir_canonical):
     jp2 = glob.glob(os.path.join(issue_dir_canonical.path, "*.jp2"))
     info = glob.glob(os.path.join(issue_dir_canonical.path, "*.txt"))
 
+    # print(str(os.path.join(issue_dir_canonical.path, "*.jp2")))
+    # print(str(jp2))
     # jp2 simple check
     if not jp2:
         local_cases_dict.setdefault(CanonicalImageCase.issues_wo_jp2.value, []).append(short_cano)
@@ -272,19 +275,22 @@ def check_canonical_issue(issue_dir_original, issue_dir_canonical):
                 shortpage = page[page.index(issue_dir_canonical.journal):]
                 local_cases_dict.setdefault(CanonicalImageCase.page_wo_jp2.value, []).append(shortpage)
 
-        # check if same number of img reported in info file than in reality
-        nb_lines = sum(1 for line in open(info[0]))
-        if nb_lines != len(jp2):
-            local_cases_dict.setdefault(CanonicalImageCase.infofile_with_wrongnumber_img.value, []).append(shortinfo)
-
         # keep stats of source image format
-        for line in open(info[0]):
-            if "tif" in line:
-                local_stats_dict[CanonicalImageStats.number_tif.value] += 1
-            elif "png" in line:
-                local_stats_dict[CanonicalImageStats.number_png.value] += 1
-            elif "jpg" in line:
-                local_stats_dict[CanonicalImageStats.number_jpg.value] += 1
+        nb_lines = 0
+        with open(info[0]) as f:
+            for line in f:
+                nb_lines += 1
+                if "tif" in line:
+                    local_stats_dict[CanonicalImageStats.number_tif.value] += 1
+                elif "png" in line:
+                    local_stats_dict[CanonicalImageStats.number_png.value] += 1
+                elif "jpg" in line:
+                    local_stats_dict[CanonicalImageStats.number_jpg.value] += 1
+
+        # check if same number of img reported in info file than in reality
+        if nb_lines != len(jp2):
+            local_cases_dict.setdefault(CanonicalImageCase.infofile_with_wrongnumber_img.value, []).append(
+                shortinfo)
 
     return local_cases_dict, local_stats_dict
 
@@ -309,109 +315,110 @@ def check_original_issue(issue_dir_original):
     else:
         try:
             archive = zipfile.ZipFile(working_archive)
-        except zipfile.BadZipfile as e:
+        except zipfile.BadZipFile as e:
             local_originalimagecase.setdefault(OriginalImageCase.issues_with_corruptedzip.value, []).append(
                 short_orig)
             logger.info(f"Bad zip file in {short_orig}")
             return local_originalimagecase, local_statsjournal
 
     # if archive ok, proceed:
-    local_statsjournal[OriginalJournalStats.issues_valid.value] += 1
+        local_statsjournal[OriginalJournalStats.issues_valid.value] += 1
 
-    # collect top dirs
-    page_folders = img_utils.get_page_folders(archive)
-    page_number = len(page_folders)
+        # collect top dirs
+        page_folders = img_utils.get_page_folders(archive)
+        page_number = len(page_folders)
+        local_statsjournal[OriginalJournalStats.number_pages.value] += page_number
 
-    # collect images
-    tifs = img_utils.get_img_from_archive(archive, "Res/PageImg", ".tif")
-    pngs = img_utils.get_img_from_archive(archive, "/Img", ".png", "/Pg")
-    jpgs = img_utils.get_img_from_archive(archive, "/Img", ".jpg", "/Pg")
+        # collect images
+        tifs = img_utils.get_img_from_archive(archive, "Res/PageImg", ".tif")
+        pngs = img_utils.get_img_from_archive(archive, "/Img", ".png", "/Pg")
+        jpgs = img_utils.get_img_from_archive(archive, "/Img", ".jpg", "/Pg")
 
-    # collect pdf
-    ext = [".pdf", ".PDF"]
-    big_pdfs = []
-    small_pdfs = []
-    for e in ext:
-        big_pdfs.append(glob.glob(os.path.join(issue_dir_original.path, e)))
-        small_pdfs.append(glob.glob(os.path.join(issue_dir_original.path, "Res", "PDF", e)))
+        # collect pdf
+        ext = [".pdf", ".PDF"]
+        big_pdfs = []
+        small_pdfs = []
+        for e in ext:
+            big_pdfs.append(glob.glob(os.path.join(issue_dir_original.path, e)))
+            small_pdfs.append(glob.glob(os.path.join(issue_dir_original.path, "Res", "PDF", e)))
 
-    if big_pdfs and small_pdfs:
-        local_statsjournal[OriginalJournalStats.issues_having_both_pdfs.value] += 1
-    if not big_pdfs:
-        local_statsjournal[OriginalJournalStats.issues_missing_large_pdf.value] += 1
-    if not small_pdfs:
-        local_statsjournal[OriginalJournalStats.issues_missing_small_pdf.value] += 1
+        if big_pdfs and small_pdfs:
+            local_statsjournal[OriginalJournalStats.issues_having_both_pdfs.value] += 1
+        if not big_pdfs:
+            local_statsjournal[OriginalJournalStats.issues_missing_large_pdf.value] += 1
+        if not small_pdfs:
+            local_statsjournal[OriginalJournalStats.issues_missing_small_pdf.value] += 1
 
-    # init counters
-    pages_with_tifs = 0
-    pages_with_pngs = 0
-    pages_with_several_pngs = 0
-    pages_with_one_pngs = 0
-    pages_with_jpgs = 0
+        # init counters
+        pages_with_tifs = 0
+        pages_with_pngs = 0
+        pages_with_several_pngs = 0
+        pages_with_one_pngs = 0
+        pages_with_jpgs = 0
 
-    for page in page_folders:
-        page_digit = os.path.split(page)[1]
+        for page in page_folders:
+            page_digit = os.path.split(page)[1]
 
-        # case 1: look for tif page
-        tif = img_utils.get_tif(tifs, page_digit)
-        if tif is not None:
-            pages_with_tifs += 1
+            # case 1: look for tif page
+            tif = img_utils.get_tif(tifs, page_digit)
+            if tif is not None:
+                pages_with_tifs += 1
 
-        # case 2: if not tif, look for png
-        else:
-            # check if png
-            png = img_utils.get_png(pngs, page_digit)
-            if png is not None:
-                pages_with_pngs += 1
-                # check when there is one or several pngs
-                # group by pages (there can be several images per pages):
-                d = defaultdict(list)
-                for i in pngs:
-                    elems = i.split("/", 1)
-                    d[elems[0]].append(elems[1])
-
-                for p, img_path in d.items():
-                    if len(img_path) > 1:
-                        pages_with_several_pngs += 1
-                    elif len(img_path) == 1:
-                        pages_with_one_pngs += 1
-
-            # case 3: if no png, look for jpg
+            # case 2: if not tif, look for png
             else:
-                # check if jpg
-                jpg = img_utils.get_jpg(jpgs, page_digit)
-                if jpg is not None:
-                    pages_with_jpgs += 1
+                # check if png
+                png = img_utils.get_png(pngs, page_digit)
+                if png is not None:
+                    pages_with_pngs += 1
+                    # check when there is one or several pngs
+                    # group by pages (there can be several images per pages):
+                    d = defaultdict(list)
+                    for i in pngs:
+                        elems = i.split("/", 1)
+                        d[elems[0]].append(elems[1])
 
-    # reporting cases
-    total = pages_with_tifs + pages_with_pngs + pages_with_jpgs
-    total_pngs = pages_with_one_pngs + pages_with_several_pngs
-    case = None
-    if total == page_number:
-        # mixed cases
-        if pages_with_tifs != 0 and pages_with_pngs != 0 and pages_with_jpgs != 0:
-            case = OriginalImageCase.issues_heterocoverage_all.value
-        elif pages_with_tifs != 0 and pages_with_pngs != 0 and pages_with_jpgs == 0:
-            case = OriginalImageCase.issues_heterocoverage_tif_png.value
-        elif pages_with_tifs != 0 and pages_with_pngs == 0 and pages_with_jpgs != 0:
-            case = OriginalImageCase.issues_heterocoverage_tif_jpg.value
-        elif pages_with_tifs == 0 and pages_with_pngs != 0 and pages_with_jpgs != 0:
-            case = OriginalImageCase.issues_heterocoverage_png_jpg.value
-        # non mixed cases
-        elif pages_with_tifs == total and pages_with_pngs == 0 and pages_with_jpgs == 0:
-            case = OriginalImageCase.issues_homogeneouscoverage_tifs.value
-        elif pages_with_tifs == 0 and pages_with_pngs == total and pages_with_jpgs == 0:
-            case = OriginalImageCase.issues_homogeneouscoverage_pngs.value
-        elif pages_with_tifs == 0 and pages_with_pngs == 0 and pages_with_jpgs == total:
-            case = OriginalImageCase.issues_homogeneouscoverage_jpgs.value
-        # collecting issues with several pngs
-        elif pages_with_tifs == 0 and pages_with_one_pngs != 0 and total_pngs == total and pages_with_jpgs == 0:
-            case = OriginalImageCase.issues_homogeneouscoverage_singlepngs.value
-    else:
-        case = OriginalImageCase.issues_missing_pageimg.value
+                    for p, img_path in d.items():
+                        if len(img_path) > 1:
+                            pages_with_several_pngs += 1
+                        elif len(img_path) == 1:
+                            pages_with_one_pngs += 1
 
-    if case is not None:
-        local_originalimagecase.setdefault(case, []).append(short_orig)
+                # case 3: if no png, look for jpg
+                else:
+                    # check if jpg
+                    jpg = img_utils.get_jpg(jpgs, page_digit)
+                    if jpg is not None:
+                        pages_with_jpgs += 1
+
+        # reporting cases
+        total = pages_with_tifs + pages_with_pngs + pages_with_jpgs
+        total_pngs = pages_with_one_pngs + pages_with_several_pngs
+        case = None
+        if total == page_number:
+            # mixed cases
+            if pages_with_tifs != 0 and pages_with_pngs != 0 and pages_with_jpgs != 0:
+                case = OriginalImageCase.issues_heterocoverage_all.value
+            elif pages_with_tifs != 0 and pages_with_pngs != 0 and pages_with_jpgs == 0:
+                case = OriginalImageCase.issues_heterocoverage_tif_png.value
+            elif pages_with_tifs != 0 and pages_with_pngs == 0 and pages_with_jpgs != 0:
+                case = OriginalImageCase.issues_heterocoverage_tif_jpg.value
+            elif pages_with_tifs == 0 and pages_with_pngs != 0 and pages_with_jpgs != 0:
+                case = OriginalImageCase.issues_heterocoverage_png_jpg.value
+            # non mixed cases
+            elif pages_with_tifs == total and pages_with_pngs == 0 and pages_with_jpgs == 0:
+                case = OriginalImageCase.issues_homogeneouscoverage_tifs.value
+            elif pages_with_tifs == 0 and pages_with_pngs == total and pages_with_jpgs == 0:
+                case = OriginalImageCase.issues_homogeneouscoverage_pngs.value
+            elif pages_with_tifs == 0 and pages_with_pngs == 0 and pages_with_jpgs == total:
+                case = OriginalImageCase.issues_homogeneouscoverage_jpgs.value
+            # collecting issues with several pngs
+            elif pages_with_tifs == 0 and pages_with_one_pngs != 0 and total_pngs == total and pages_with_jpgs == 0:
+                case = OriginalImageCase.issues_homogeneouscoverage_singlepngs.value
+        else:
+            case = OriginalImageCase.issues_missing_pageimg.value
+
+        if case is not None:
+            local_originalimagecase.setdefault(case, []).append(short_orig)
     return local_originalimagecase, local_statsjournal
 
 
@@ -454,6 +461,8 @@ def check_canonical_journal(original_issues, canonical_issues, parallel_executio
 
     # execute tasks
     results = utils.executetask(tasks, parallel_execution)
+
+    # add local (issue) results to global (journal) results
     for cases, stats in results:
         canonical_cases.update(cases)
         for name, member in CanonicalImageStats.__members__.items():
@@ -518,7 +527,6 @@ def print_canonicalreport(canonical_cases, image_counts, journal_counts, global_
     @return:
     """
     # handle results
-    print(f"\nPrinting results")
     logger.info(f"\nPrinting results")
 
     # Print global report
@@ -542,7 +550,6 @@ def print_canonicalreport(canonical_cases, image_counts, journal_counts, global_
     for name, member in CanonicalImageStats.__members__.items():
         for ic in image_counts:
             if ic == member.value:
-                print(f"image stats: {ic} : {image_counts[ic]}")
                 if ic == CanonicalImageStats.size_jp2.value:
                     global_report.write(f"{humanize.naturalsize(image_counts[ic])}")
                 else:
@@ -617,6 +624,8 @@ def run_check_canonical(command, journals, orig_dir, canon_dir, report_dir, para
     @return:
     """
 
+    # TODO: add warning in log if number of pages and images differ.
+
     # variables
     timestr = time.strftime("%Y%m%d-%H%M%S")
 
@@ -636,8 +645,8 @@ def run_check_canonical(command, journals, orig_dir, canon_dir, report_dir, para
 
     # sanity check for each journal
     for journal in journals:
-        print(f"Executing: {command} for journal {journal}")
-        logger.info(f"Executing: {command} for journal {journal}")
+        print(f"\n*** Executing: {command} for journal {journal}:")
+        logger.info(f"\n*** Executing: {command} for journal {journal}:")
 
         # detect issues to consider for current journal
         original_issues = path.detect_journal_issues(orig_dir, journal)
@@ -654,10 +663,6 @@ def run_check_canonical(command, journals, orig_dir, canon_dir, report_dir, para
         # check
         canonical_cases, image_counts, journal_counts = check_canonical_journal(original_issues, canonical_issues, parallel_execution)
         print_canonicalreport(canonical_cases, image_counts, journal_counts, fh_globalreport, fh_localreport)
-
-        # print(str(canonical_cases))
-        # print(str(image_counts))
-        # print(str(journal_counts))
 
     fh_globalreport.close()
     print(f"Done")
@@ -707,6 +712,8 @@ def run_check_original(command, journals, orig_dir, report_dir, parallel_executi
         # check
         journal_original_cases, journal_counts = check_original_journal(original_issues, parallel_execution)
 
+        print(str(journal_original_cases))
+        print(str(journal_counts))
         # print results
         print_originalreport(journal_original_cases, journal_counts, fh_globalreport, fh_localreport)
 
