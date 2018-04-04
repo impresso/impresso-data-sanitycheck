@@ -13,14 +13,13 @@ __author__ = "maudehrmann"
 
 
 class TestRunCheckOriginal(TestCase):
-
     global orig_dir
     global newspapers
     orig_dir = "../../test-data/original"
     newspapers = "ORIGTEST"
 
-    original_cases = {'issues w/o zip': [],
-                      'issues w/ corruptedzip': [],
+    original_cases = {'issues w/o zip': ['ORIGTEST/1930/06/11'],
+                      'issues w/ corruptedzip': ['ORIGTEST/1881/02/26'],
                       'issues_homogeneouscoverage_tifs': ['ORIGTEST/1900/01/10'],
                       'issues_homogeneouscoverage_pngs': ['ORIGTEST/1900/01/11'],
                       'issues_homogeneouscoverage_jpgs': ['ORIGTEST/1900/01/12'],
@@ -31,15 +30,15 @@ class TestRunCheckOriginal(TestCase):
                       'issues_heterocoverage_png_jpg': [],
                       'issues_missing_pageimg': []}
 
-    journal_counts = {'number original issues': 3,
-                      'number valid original issues': 3,
+    journal_counts = {'number original issues': 7,
+                      'number valid original issues': 5,
                       'issues w/o large pdf': 0,
                       'issues w/o small pdfs': 0,
                       'issues w/o both pdfs': 0,
-                      'issues w both pdfs': 3}
+                      'issues w both pdfs': 5,
+                      'number of pages': 28}
 
     def test_run_check_original(self):
-
         journals = newspapers.split(" ")
 
         for journal in journals:
