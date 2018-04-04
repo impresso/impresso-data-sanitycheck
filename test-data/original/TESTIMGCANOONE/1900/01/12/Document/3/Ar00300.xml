@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<XMD-entity REPOSITORY_FORMAT="1.0" PRXML_VER="2.2" ENTITY_TYPE="Article" DOC_UID="LCE_02/08/1868" DOC_VER="1" FIRST_TOC_ENTRY_ID="12" DEPTH_LEVEL="1" INDEX_IN_DOC="12" PAGE_NO="3" ID="Ar00300" BOX="50 168 496 1206" LANGUAGE="French" SNP="Ar00300S.png" SNP_WIDTH="441" SNP_HEIGHT="73">
+	<Meta NAME="Untitled Article" DESCRIPTION="" SUBTYPE="" BASE_HREF="LCE/1868/08/02" SOURCE_TYPE="TIFF" PUBLICATION="LCE" SECTION="None" ISSUE_DATE="02/08/1868" WORDCNT="452" RELEASE_NO="113-LCE-1868-08-02-0001" PAGE_ID="" PAGE_TYPE="Single" PAGE_WIDTH="1457" PAGE_HEIGHT="2002" DEFAULT_IMG_EXT="png" PDF_DESTINATION_MAPPED="OLV0_Entity_0003_0001" IMAGES_RESOLUTION="144" XMD_VER="2.6.241.4" PAGE_LABEL="3" TOTAL_CHARS_COUNT="1953" SUSPICIOUS_CHARS_COUNT="0"/>
+	<Link SOURCE="113-LCE-1868-08-02-0001.pdf" FIRST_ID="Ar00200" LAST_ID="Ar00416" NEXT_ID="Ar00301" PREV_ID="" TOC_ID="W:/Repository/LCE/1868/08/02/TOC.xml"/>
+	<DataFiles>
+		<Files TYPE="DOC_PDF" PRESENT="1"/>
+		<Files TYPE="PAGE_PDF" PRESENT="1"/>
+		<Files TYPE="DOC_IMG" PRESENT="0"/>
+		<Files TYPE="PAGE_IMG" PRESENT="1"/>
+		<Files TYPE="PAGE_VIEW_IMG" PRESENT="1"/>
+		<Files TYPE="PAGE_PREVIEW_IMG" PRESENT="1"/>
+		<Files TYPE="PRIMITIVE_IMG" PRESENT="1"/>
+		<Files TYPE="SNIPPET_IMG" PRESENT="1"/>
+		<Files TYPE="SEGMENTATION" PRESENT="1"/>
+	</DataFiles>
+	<Content>
+		<Primitive BOX="52 168 492 288" ID="Ar0030000" SEQ_NO="0" TOC_ENTRY_ID="12" DEPTH_LEVEL="1">
+			<L BOX="53 168 492 187"/>
+			<W BOX="53 168 82 187" STYLE_REF="6">que</W>
+			<Q BOX="89 168 95 187" STYLE_REF="6" QID="1">l</Q>
+			<Q BOX="95 168 99 187" STYLE_REF="6" QID="1">'</Q>
+			<q BOX="99 168 191 187" STYLE_REF="6" NS="y" QID="1">impossible</q>
+			<QW QID="1">l'impossible</QW>
+			<W BOX="192 168 196 187" STYLE_REF="6">,</W>
+			<W BOX="206 168 246 187" STYLE_REF="6">mais</W>
+			<W BOX="255 168 297 187" STYLE_REF="6">aussi</W>
+			<W BOX="306 168 332 187" STYLE_REF="6">fait</W>
+			<W BOX="342 168 362 187" STYLE_REF="6">on</W>
+			<W BOX="371 168 439 187" STYLE_REF="6">presque</W>
+			<Q BOX="458 168 485 187" STYLE_REF="6" QID="2">Fin</Q>
+			<Q BOX="485 168 492 187" STYLE_REF="6" QID="2">-</Q>
+			<L BOX="53 188 127 207"/>
+			<q BOX="53 188 122 207" STYLE_REF="6" NS="y" QID="2">possible</q>
+			<QW QID="2">Finpossible</QW>
+			<W BOX="122 188 127 207" STYLE_REF="6">.</W>
+			<L BOX="72 208 491 227" P="SA"/>
+			<W BOX="72 208 101 227" STYLE_REF="6">Les</W>
+			<W BOX="109 208 182 227" STYLE_REF="6">résultats</W>
+			<W BOX="190 208 257 227" STYLE_REF="6">obtenus</W>
+			<W BOX="265 208 292 227" STYLE_REF="6">par</W>
+			<Q BOX="300 208 306 227" STYLE_REF="6" QID="3">l</Q>
+			<Q BOX="306 208 310 227" STYLE_REF="6" QID="3">'</Q>
+			<q BOX="310 208 382 227" STYLE_REF="6" QID="3">artillerie</q>
+			<QW QID="3">l'artillerie</QW>
+			<W BOX="390 208 425 227" STYLE_REF="6">sont</W>
+			<W BOX="434 208 491 227" STYLE_REF="6">encore</W>
+			<L BOX="52 228 491 247"/>
+			<W BOX="52 228 85 247" STYLE_REF="6">plus</W>
+			<Q BOX="92 228 161 247" STYLE_REF="6" QID="4">étonnan</Q>
+			<q BOX="162 228 167 247" STYLE_REF="6" QID="4">t</q>
+			<QW QID="4">étonnant</QW>
+			<W BOX="176 228 191 247" STYLE_REF="6">et</W>
+			<W BOX="200 228 226 247" STYLE_REF="6">ont</W>
+			<W BOX="235 228 293 247" STYLE_REF="6">surpris</W>
+			<W BOX="310 228 329 247" STYLE_REF="6">au</W>
+			<W BOX="343 228 377 247" STYLE_REF="6">plus</W>
+			<W BOX="393 228 430 247" STYLE_REF="6">haut</W>
+			<W BOX="447 228 491 247" STYLE_REF="6">point</W>
+			<L BOX="52 247 491 266"/>
+			<W BOX="52 247 84 266" STYLE_REF="6">plus</W>
+			<Q BOX="91 247 101 266" STYLE_REF="6" QID="5">d</Q>
+			<Q BOX="101 247 105 266" STYLE_REF="6" QID="5">'</Q>
+			<q BOX="105 247 126 266" STYLE_REF="6" QID="5">un</q>
+			<QW QID="5">d'un</QW>
+			<W BOX="134 247 190 266" STYLE_REF="6">officier</W>
+			<W BOX="201 247 283 266" STYLE_REF="6">supérieur</W>
+			<Q BOX="292 247 358 266" STYLE_REF="6" QID="6">étrange</Q>
+			<q BOX="360 247 366 266" STYLE_REF="6" QID="6">r</q>
+			<QW QID="6">étranger</QW>
+			<W BOX="377 247 403 266" STYLE_REF="6">qui</W>
+			<W BOX="411 247 438 266" STYLE_REF="6">ont</W>
+			<Q BOX="454 247 483 266" STYLE_REF="6" QID="7">exa</Q>
+			<Q BOX="484 247 491 266" STYLE_REF="6" QID="7">-</Q>
+			<L BOX="53 267 490 286"/>
+			<Q BOX="53 267 84 286" STYLE_REF="6" QID="7">min</Q>
+			<q BOX="84 267 93 286" STYLE_REF="6" QID="7">é</q>
+			<QW QID="7">examiné</QW>
+			<W BOX="100 267 141 286" STYLE_REF="6">cette</W>
+			<W BOX="150 267 193 286" STYLE_REF="6">arme</W>
+			<W BOX="203 267 222 286" STYLE_REF="6">de</W>
+			<W BOX="231 267 265 286" STYLE_REF="6">plus</W>
+			<W BOX="273 267 309 286" STYLE_REF="6" NS="y">près</W>
+			<W BOX="310 267 315 286" STYLE_REF="6">.</W>
+			<W BOX="324 267 345 286" STYLE_REF="6">Le</W>
+			<W BOX="355 267 423 286" STYLE_REF="6">manque</W>
+			<Q BOX="441 267 451 286" STYLE_REF="6" QID="8">d</Q>
+			<Q BOX="451 267 455 286" STYLE_REF="6" QID="8">'</Q>
+			<Q BOX="455 267 484 286" STYLE_REF="6" QID="8">offi</Q>
+			<Q BOX="484 267 490 286" STYLE_REF="6" QID="8">-</Q>
+		</Primitive>
+		<Primitive BOX="52 290 490 430" ID="Ar0030001" SEQ_NO="1" TOC_ENTRY_ID="12" DEPTH_LEVEL="1">
+			<L BOX="53 287 491 306"/>
+			<q BOX="53 287 90 306" STYLE_REF="6" QID="8">ciers</q>
+			<QW QID="8">d'officiers</QW>
+			<W BOX="98 287 188 306" STYLE_REF="6">supérieurs</W>
+			<W BOX="197 287 270 306" STYLE_REF="6">capables</W>
+			<W BOX="280 287 299 306" STYLE_REF="6">ne</W>
+			<W BOX="314 287 331 306" STYLE_REF="6">se</W>
+			<W BOX="347 287 372 306" STYLE_REF="6">fait</W>
+			<W BOX="390 287 417 306" STYLE_REF="6">pas</W>
+			<W BOX="434 287 491 306" STYLE_REF="6">encore</W>
+			<L BOX="52 306 490 325"/>
+			<W BOX="52 306 99 325" STYLE_REF="6" NS="y">sentir</W>
+			<W BOX="99 306 104 325" STYLE_REF="6">,</W>
+			<W BOX="114 306 153 325" STYLE_REF="6">mais</W>
+			<W BOX="161 306 172 325" STYLE_REF="6">il</W>
+			<W BOX="180 306 199 325" STYLE_REF="6">ne</W>
+			<W BOX="207 306 269 325" STYLE_REF="6">tardera</W>
+			<W BOX="278 306 305 325" STYLE_REF="6">pas</W>
+			<W BOX="313 306 322 325" STYLE_REF="6">à</W>
+			<W BOX="330 306 348 325" STYLE_REF="6">se</W>
+			<W BOX="356 306 429 325" STYLE_REF="6">produire</W>
+			<W BOX="440 306 467 325" STYLE_REF="6">par</W>
+			<W BOX="476 306 490 325" STYLE_REF="6">la</W>
+			<L BOX="53 326 490 345"/>
+			<W BOX="53 326 101 345" STYLE_REF="6">raison</W>
+			<W BOX="109 326 140 345" STYLE_REF="6" NS="y">que</W>
+			<W BOX="142 326 146 345" STYLE_REF="6">,</W>
+			<W BOX="155 326 174 345" STYLE_REF="6">de</W>
+			<W BOX="183 326 233 345" STYLE_REF="6">moins</W>
+			<W BOX="242 326 261 345" STYLE_REF="6">en</W>
+			<W BOX="269 326 321 345" STYLE_REF="6" NS="y">moins</W>
+			<W BOX="322 326 327 345" STYLE_REF="6">,</W>
+			<W BOX="334 326 356 345" STYLE_REF="6">les</W>
+			<W BOX="362 326 416 345" STYLE_REF="6">Suisse</W>
+			<W BOX="428 326 490 345" STYLE_REF="6">entrent</W>
+			<L BOX="52 346 490 365"/>
+			<W BOX="52 346 89 365" STYLE_REF="6">dans</W>
+			<W BOX="96 346 111 365" STYLE_REF="6">le</W>
+			<W BOX="118 346 179 365" STYLE_REF="6">service</W>
+			<W BOX="188 346 261 365" STYLE_REF="6" NS="y">étranger</W>
+			<W BOX="262 346 267 365" STYLE_REF="6">.</W>
+			<W BOX="277 346 307 365" STYLE_REF="6">Les</W>
+			<W BOX="316 346 382 365" STYLE_REF="6">charges</W>
+			<W BOX="396 346 490 365" STYLE_REF="6">inférieures</W>
+			<L BOX="52 366 488 385"/>
+			<W BOX="52 366 96 385" STYLE_REF="6">laisse</W>
+			<W BOX="104 366 161 385" STYLE_REF="6">encore</W>
+			<W BOX="171 366 205 385" STYLE_REF="6">bien</W>
+			<W BOX="218 366 246 385" STYLE_REF="6">des</W>
+			<W BOX="254 366 310 385" STYLE_REF="6">choses</W>
+			<W BOX="319 366 328 385" STYLE_REF="6">à</W>
+			<W BOX="333 366 394 385" STYLE_REF="6" NS="y">désirer</W>
+			<W BOX="395 366 400 385" STYLE_REF="6">,</W>
+			<W BOX="408 366 421 385" STYLE_REF="6">si</W>
+			<Q BOX="430 366 437 385" STYLE_REF="6" QID="9">l</Q>
+			<Q BOX="437 366 441 385" STYLE_REF="6" QID="9">'</Q>
+			<Q BOX="441 366 478 385" STYLE_REF="6" QID="9">étud</Q>
+			<q BOX="479 366 488 385" STYLE_REF="6" QID="9">e</q>
+			<QW QID="9">l'étude</QW>
+			<L BOX="52 385 490 404"/>
+			<W BOX="52 385 66 404" STYLE_REF="6">et</W>
+			<Q BOX="72 385 78 404" STYLE_REF="6" QID="10">l</Q>
+			<Q BOX="78 385 82 404" STYLE_REF="6" QID="10">'</Q>
+			<q BOX="82 385 173 404" STYLE_REF="6" QID="10">application</q>
+			<QW QID="10">l'application</QW>
+			<W BOX="183 385 244 404" STYLE_REF="6">privées</W>
+			<W BOX="253 385 273 404" STYLE_REF="6">ne</W>
+			<W BOX="283 385 358 404" STYLE_REF="6">viennent</W>
+			<W BOX="373 385 401 404" STYLE_REF="6">pas</W>
+			<W BOX="416 385 435 404" STYLE_REF="6">en</W>
+			<W BOX="454 385 490 404" STYLE_REF="6">aide</W>
+			<L BOX="52 405 433 424"/>
+			<W BOX="52 405 70 424" STYLE_REF="6">au</W>
+			<W BOX="77 405 126 424" STYLE_REF="6">temps</W>
+			<W BOX="135 405 148 424" STYLE_REF="6">si</W>
+			<W BOX="156 405 202 424" STYLE_REF="6">exigu</W>
+			<W BOX="212 405 232 424" STYLE_REF="6">de</W>
+			<Q BOX="240 405 247 424" STYLE_REF="6" QID="11">l</Q>
+			<Q BOX="247 405 251 424" STYLE_REF="6" QID="11">'</Q>
+			<q BOX="251 405 340 424" STYLE_REF="6" QID="11">instruction</q>
+			<QW QID="11">l'instruction</QW>
+			<W BOX="354 405 427 424" STYLE_REF="6" NS="y">pratique</W>
+			<W BOX="428 405 433 424" STYLE_REF="6">.</W>
+		</Primitive>
+		<Primitive BOX="50 436 490 558" ID="Ar0030002" SEQ_NO="2" TOC_ENTRY_ID="12" DEPTH_LEVEL="1">
+			<L BOX="70 438 487 457" P="SA"/>
+			<W BOX="70 438 86 457" STYLE_REF="6">Si</W>
+			<W BOX="94 438 108 457" STYLE_REF="6">la</W>
+			<W BOX="115 438 175 456" STYLE_REF="5">Gazslle</W>
+			<W BOX="184 438 203 456" STYLE_REF="5">de</W>
+			<W BOX="210 438 226 456" STYLE_REF="5">la</W>
+			<W BOX="233 438 278 456" STYLE_REF="5">Croix</W>
+			<W BOX="288 438 331 457" STYLE_REF="6">parle</W>
+			<W BOX="341 438 360 457" STYLE_REF="6">de</W>
+			<W BOX="371 438 385 457" STYLE_REF="6">la</W>
+			<W BOX="400 438 457 457" STYLE_REF="6">guerre</W>
+			<W BOX="467 438 487 457" STYLE_REF="6">du</W>
+			<L BOX="52 458 490 477"/>
+			<W BOX="52 458 148 477" STYLE_REF="5">Sonderbund</W>
+			<W BOX="157 458 196 477" STYLE_REF="6">pour</W>
+			<W BOX="204 458 272 477" STYLE_REF="6">illustrer</W>
+			<W BOX="281 458 309 477" STYLE_REF="6">son</W>
+			<W BOX="317 458 445 477" STYLE_REF="6" NS="y">argumentation</W>
+			<W BOX="446 458 451 477" STYLE_REF="6">,</W>
+			<W BOX="460 458 490 477" STYLE_REF="6">elle</W>
+			<L BOX="51 478 489 497"/>
+			<W BOX="51 478 110 497" STYLE_REF="6">semble</W>
+			<W BOX="118 478 178 497" STYLE_REF="6">oublier</W>
+			<Q BOX="188 478 209 497" STYLE_REF="6" QID="12">qu</Q>
+			<Q BOX="209 478 213 497" STYLE_REF="6" QID="12">'</Q>
+			<q BOX="213 478 234 497" STYLE_REF="6" NS="y" QID="12">un</q>
+			<QW QID="12">qu'un</QW>
+			<W BOX="234 478 239 497" STYLE_REF="6">,</W>
+			<W BOX="246 478 303 497" STYLE_REF="6">espace</W>
+			<W BOX="311 478 330 497" STYLE_REF="6">de</W>
+			<W BOX="338 478 359 497" STYLE_REF="6">21</W>
+			<W BOX="371 478 399 497" STYLE_REF="6">ans</W>
+			<W BOX="415 478 455 497" STYLE_REF="6">nous</W>
+			<W BOX="470 478 489 497" STYLE_REF="6">en</W>
+			<L BOX="50 498 489 517"/>
+			<W BOX="50 498 105 517" STYLE_REF="6" NS="y">sépare</W>
+			<W BOX="106 498 111 517" STYLE_REF="6">,</W>
+			<Q BOX="119 498 141 517" STYLE_REF="6" QID="13">qu</Q>
+			<Q BOX="141 498 145 517" STYLE_REF="6" QID="13">'</Q>
+			<q BOX="145 498 166 517" STYLE_REF="6" QID="13">on</q>
+			<QW QID="13">qu'on</QW>
+			<W BOX="176 498 185 517" STYLE_REF="6">a</W>
+			<W BOX="193 498 226 517" STYLE_REF="6">rien</W>
+			<Q BOX="235 498 278 517" STYLE_REF="6" QID="14">oubli</Q>
+			<q BOX="279 498 288 517" STYLE_REF="6" QID="14">é</q>
+			<QW QID="14">oublié</QW>
+			<W BOX="297 498 316 517" STYLE_REF="6">en</W>
+			<W BOX="325 498 381 517" STYLE_REF="6" NS="y">Suisse</W>
+			<W BOX="382 498 387 517" STYLE_REF="6">,</W>
+			<W BOX="396 498 435 517" STYLE_REF="6">mais</W>
+			<Q BOX="443 498 464 517" STYLE_REF="6" QID="15">qu</Q>
+			<Q BOX="464 498 469 517" STYLE_REF="6" QID="15">'</Q>
+			<q BOX="469 498 489 517" STYLE_REF="6" QID="15">on</q>
+			<QW QID="15">qu'on</QW>
+			<L BOX="50 518 490 537"/>
+			<W BOX="50 518 60 537" STYLE_REF="6">y</W>
+			<W BOX="68 518 77 537" STYLE_REF="6">a</W>
+			<W BOX="84 518 166 537" STYLE_REF="6">beaucoub</W>
+			<W BOX="174 518 228 537" STYLE_REF="6" NS="y">appris</W>
+			<W BOX="229 518 234 537" STYLE_REF="6">.</W>
+			<W BOX="242 518 301 537" STYLE_REF="6" NS="y">Certes</W>
+			<W BOX="302 518 307 537" STYLE_REF="6">,</W>
+			<W BOX="316 518 339 537" STYLE_REF="6">les</W>
+			<W BOX="348 518 407 537" STYLE_REF="6">milices</W>
+			<W BOX="423 518 484 537" STYLE_REF="6" NS="y">suisses</W>
+			<W BOX="485 518 490 537" STYLE_REF="6">,</W>
+			<L BOX="52 538 490 557"/>
+			<W BOX="52 538 85 557" STYLE_REF="6">bien</W>
+			<W BOX="93 538 112 557" STYLE_REF="6">au</W>
+			<W BOX="121 538 198 557" STYLE_REF="6">contraire</W>
+			<W BOX="211 538 231 557" STYLE_REF="6">de</W>
+			<W BOX="240 538 258 557" STYLE_REF="6">ce</W>
+			<Q BOX="266 538 288 557" STYLE_REF="6" QID="16">qu</Q>
+			<Q BOX="288 538 292 557" STYLE_REF="6" QID="16">'</Q>
+			<q BOX="292 538 312 557" STYLE_REF="6" QID="16">en</q>
+			<QW QID="16">qu'en</QW>
+			<W BOX="322 538 343 557" STYLE_REF="6">dit</W>
+			<Q BOX="352 538 358 557" STYLE_REF="6" QID="17">l</Q>
+			<Q BOX="358 538 363 557" STYLE_REF="6" QID="17">'</Q>
+			<q BOX="363 538 417 557" STYLE_REF="6" QID="17">auteur</q>
+			<QW QID="17">l'auteur</QW>
+			<W BOX="427 538 446 557" STYLE_REF="6">de</W>
+			<Q BOX="456 538 462 557" STYLE_REF="6" QID="18">l</Q>
+			<Q BOX="462 538 466 557" STYLE_REF="6" QID="18">'</Q>
+			<Q BOX="466 538 483 557" STYLE_REF="6" QID="18">ar</Q>
+			<Q BOX="483 538 490 557" STYLE_REF="6" QID="18">-</Q>
+		</Primitive>
+		<Primitive BOX="52 558 490 680" ID="Ar0030003" SEQ_NO="3" TOC_ENTRY_ID="12" DEPTH_LEVEL="1">
+			<L BOX="52 558 490 577"/>
+			<q BOX="52 558 86 577" STYLE_REF="6" NS="y" QID="18">ticle</q>
+			<QW QID="18">l'article</QW>
+			<W BOX="86 558 91 577" STYLE_REF="6">,</W>
+			<W BOX="99 558 133 577" STYLE_REF="6">sont</W>
+			<W BOX="142 558 161 577" STYLE_REF="6">en</W>
+			<Q BOX="171 558 196 577" STYLE_REF="6" QID="19">éta</Q>
+			<q BOX="196 558 202 577" STYLE_REF="6" QID="19">t</q>
+			<QW QID="19">état</QW>
+			<W BOX="210 558 230 577" STYLE_REF="6">de</W>
+			<W BOX="239 558 309 577" STYLE_REF="6">soutenir</W>
+			<W BOX="318 558 332 577" STYLE_REF="6">la</W>
+			<W BOX="345 558 425 577" STYLE_REF="6">défensive</W>
+			<W BOX="437 558 490 577" STYLE_REF="6">contre</W>
+			<L BOX="53 579 483 598"/>
+			<W BOX="53 579 81 598" STYLE_REF="6">une</W>
+			<W BOX="89 579 142 598" STYLE_REF="6">armée</W>
+			<W BOX="152 579 226 598" STYLE_REF="6" NS="y">ennemie</W>
+			<W BOX="227 579 232 598" STYLE_REF="6">.</W>
+			<W BOX="243 579 266 598" STYLE_REF="6">De</W>
+			<W BOX="275 579 310 598" STYLE_REF="6" NS="y">plus</W>
+			<W BOX="310 579 315 598" STYLE_REF="6">,</W>
+			<Q BOX="322 579 328 598" STYLE_REF="6" QID="20">l</Q>
+			<Q BOX="328 579 332 598" STYLE_REF="6" QID="20">'</Q>
+			<q BOX="332 579 438 598" STYLE_REF="6" QID="20">organisation</q>
+			<QW QID="20">l'organisation</QW>
+			<Q BOX="451 579 473 598" STYLE_REF="6" QID="21">int</Q>
+			<q BOX="474 579 483 598" STYLE_REF="6" QID="21">é</q>
+			<QW QID="21">inté</QW>
+			<L BOX="52 599 490 618"/>
+			<W BOX="52 599 100 618" STYLE_REF="6">rieure</W>
+			<W BOX="107 599 131 618" STYLE_REF="6">est</W>
+			<W BOX="139 599 227 618" STYLE_REF="6">excellente</W>
+			<W BOX="236 599 241 618" STYLE_REF="6">:</W>
+			<W BOX="248 599 262 618" STYLE_REF="6">la</W>
+			<W BOX="271 599 331 618" STYLE_REF="6" NS="y">preuve</W>
+			<W BOX="332 599 337 618" STYLE_REF="6">,</W>
+			<Q BOX="347 599 356 618" STYLE_REF="6" QID="22">c</Q>
+			<Q BOX="356 599 360 618" STYLE_REF="6" QID="22">'</Q>
+			<q BOX="360 599 383 618" STYLE_REF="6" QID="22">est</q>
+			<QW QID="22">c'est</QW>
+			<W BOX="397 599 428 618" STYLE_REF="6" NS="y">que</W>
+			<W BOX="430 599 435 618" STYLE_REF="6">,</W>
+			<W BOX="450 599 490 618" STYLE_REF="6">dans</W>
+			<L BOX="52 619 489 638"/>
+			<Q BOX="52 619 57 638" STYLE_REF="6" QID="23">l</Q>
+			<Q BOX="57 619 61 638" STYLE_REF="6" QID="23">'</Q>
+			<q BOX="60 619 110 638" STYLE_REF="6" QID="23">affaire</q>
+			<QW QID="23">l'affaire</QW>
+			<W BOX="120 619 185 638" STYLE_REF="6">critique</W>
+			<W BOX="192 619 211 638" STYLE_REF="6">du</W>
+			<W BOX="218 619 331 638" STYLE_REF="6" NS="y">Luxembourg</W>
+			<W BOX="332 619 337 638" STYLE_REF="6">,</W>
+			<W BOX="345 619 396 638" STYLE_REF="6">toutes</W>
+			<W BOX="404 619 426 638" STYLE_REF="6">les</W>
+			<Q BOX="436 619 481 638" STYLE_REF="6" QID="24">mesu</Q>
+			<Q BOX="482 619 489 638" STYLE_REF="6" QID="24">-</Q>
+			<L BOX="52 639 490 658"/>
+			<q BOX="52 639 74 658" STYLE_REF="6" QID="24">res</q>
+			<QW QID="24">mesures</QW>
+			<Q BOX="81 639 132 658" STYLE_REF="6" QID="25">étaien</Q>
+			<q BOX="133 639 139 658" STYLE_REF="6" QID="25">t</q>
+			<QW QID="25">étaient</QW>
+			<W BOX="148 639 197 658" STYLE_REF="6">prises</W>
+			<W BOX="206 639 244 658" STYLE_REF="6">pour</W>
+			<W BOX="252 639 317 658" STYLE_REF="6">pouvoir</W>
+			<W BOX="324 639 397 658" STYLE_REF="6">disposer</W>
+			<W BOX="405 639 425 658" STYLE_REF="6">de</W>
+			<W BOX="432 639 453 658" STYLE_REF="6" NS="y">80</W>
+			<W BOX="453 639 459 658" STYLE_REF="6" NS="y">,</W>
+			<W BOX="459 639 490 658" STYLE_REF="6">000</W>
+			<L BOX="52 659 489 678"/>
+			<W BOX="52 659 122 678" STYLE_REF="6" NS="y">hommes</W>
+			<W BOX="122 659 127 678" STYLE_REF="6">.</W>
+			<W BOX="135 659 159 678" STYLE_REF="6">Ou</W>
+			<W BOX="168 659 188 678" STYLE_REF="6">ne</W>
+			<W BOX="197 659 226 678" STYLE_REF="6">peu</W>
+			<W BOX="235 659 268 678" STYLE_REF="6">nier</W>
+			<W BOX="276 659 307 678" STYLE_REF="6">que</W>
+			<W BOX="316 659 331 678" STYLE_REF="6">la</W>
+			<Q BOX="338 659 382 678" STYLE_REF="6" QID="26">sûret</Q>
+			<q BOX="383 659 392 678" STYLE_REF="6" QID="26">é</q>
+			<QW QID="26">sûreté</QW>
+			<W BOX="409 659 489 678" STYLE_REF="6">première</W>
+		</Primitive>
+		<Primitive BOX="52 680 490 800" ID="Ar0030004" SEQ_NO="4" TOC_ENTRY_ID="12" DEPTH_LEVEL="1">
+			<L BOX="52 679 490 698"/>
+			<W BOX="52 679 71 698" STYLE_REF="6">de</W>
+			<W BOX="77 679 91 698" STYLE_REF="6">la</W>
+			<W BOX="98 679 152 698" STYLE_REF="6">Suisse</W>
+			<W BOX="161 679 217 698" STYLE_REF="6">repose</W>
+			<W BOX="226 679 266 698" STYLE_REF="6">dans</W>
+			<W BOX="282 679 299 698" STYLE_REF="6">sa</W>
+			<Q BOX="315 679 389 698" STYLE_REF="6" QID="27">neutralit</Q>
+			<q BOX="390 679 399 698" STYLE_REF="6" QID="27">é</q>
+			<QW QID="27">neutralité</QW>
+			<W BOX="417 679 490 698" STYLE_REF="6">garantie</W>
+			<L BOX="53 700 490 719"/>
+			<W BOX="53 700 77 719" STYLE_REF="6">par</W>
+			<W BOX="84 700 106 719" STYLE_REF="6">les</W>
+			<W BOX="115 700 206 719" STYLE_REF="6" NS="y">puissances</W>
+			<W BOX="207 700 212 719" STYLE_REF="6">,</W>
+			<W BOX="220 700 260 719" STYLE_REF="6">mais</W>
+			<W BOX="269 700 279 719" STYLE_REF="6">il</W>
+			<W BOX="287 700 306 719" STYLE_REF="6">ne</W>
+			<W BOX="315 700 347 719" STYLE_REF="6">faut</W>
+			<W BOX="356 700 383 719" STYLE_REF="6">pas</W>
+			<W BOX="394 700 437 719" STYLE_REF="6">taxer</W>
+			<W BOX="456 700 490 719" STYLE_REF="6">trop</W>
+			<L BOX="55 720 490 739"/>
+			<W BOX="55 720 81 739" STYLE_REF="6">bas</W>
+			<W BOX="90 720 120 739" STYLE_REF="6">non</W>
+			<W BOX="129 720 164 739" STYLE_REF="6" NS="y">plus</W>
+			<W BOX="165 720 170 739" STYLE_REF="6">,</W>
+			<W BOX="178 720 195 739" STYLE_REF="6">ce</W>
+			<W BOX="204 720 234 739" STYLE_REF="6">que</W>
+			<W BOX="243 720 273 739" STYLE_REF="6">peu</W>
+			<W BOX="281 720 312 739" STYLE_REF="6">une</W>
+			<W BOX="320 720 373 739" STYLE_REF="6">armée</W>
+			<W BOX="383 720 418 739" STYLE_REF="6">bien</W>
+			<Q BOX="424 720 481 739" STYLE_REF="6" QID="28">équipé</Q>
+			<q BOX="481 720 490 739" STYLE_REF="6" QID="28">e</q>
+			<QW QID="28">équipée</QW>
+			<L BOX="52 740 490 759"/>
+			<W BOX="52 740 76 759" STYLE_REF="6">qui</W>
+			<W BOX="83 740 140 759" STYLE_REF="6">détend</W>
+			<W BOX="150 740 167 759" STYLE_REF="6" NS="y">so</W>
+			<W BOX="167 740 173 759" STYLE_REF="6" NS="y">:</W>
+			<W BOX="172 740 178 759" STYLE_REF="6">i</W>
+			<W BOX="187 740 226 759" STYLE_REF="6">pays</W>
+			<W BOX="234 740 249 759" STYLE_REF="6">et</W>
+			<W BOX="258 740 286 759" STYLE_REF="6">son</W>
+			<W BOX="300 740 344 759" STYLE_REF="6" NS="y">foyer</W>
+			<W BOX="345 740 350 759" STYLE_REF="6">.</W>
+			<W BOX="368 740 408 759" STYLE_REF="6">Tout</W>
+			<W BOX="427 740 490 759" STYLE_REF="6">ennemi</W>
+			<L BOX="53 760 490 779"/>
+			<W BOX="53 760 71 779" STYLE_REF="6">ne</W>
+			<Q BOX="78 760 159 779" STYLE_REF="6" QID="29">réfléchira</Q>
+			<Q BOX="159 760 166 779" STYLE_REF="6" LH="y" QID="29">-</Q>
+			<Q BOX="166 760 172 779" STYLE_REF="6" QID="29">t</Q>
+			<Q BOX="172 760 179 779" STYLE_REF="6" LH="y" QID="29">-</Q>
+			<q BOX="179 760 191 779" STYLE_REF="6" QID="29">il</q>
+			<QW QID="29">réfléchira-t-il</QW>
+			<W BOX="202 760 229 779" STYLE_REF="6">pas</W>
+			<W BOX="238 760 279 779" STYLE_REF="6">deux</W>
+			<W BOX="289 760 318 779" STYLE_REF="6">fois</W>
+			<W BOX="327 760 374 779" STYLE_REF="6">avant</W>
+			<W BOX="384 760 404 779" STYLE_REF="6">de</W>
+			<W BOX="420 760 461 779" STYLE_REF="6">léser</W>
+			<W BOX="475 760 490 779" STYLE_REF="6">la</W>
+			<L BOX="53 780 490 799"/>
+			<Q BOX="53 780 123 799" STYLE_REF="6" QID="30">neutralit</Q>
+			<q BOX="123 780 132 799" STYLE_REF="6" QID="30">é</q>
+			<QW QID="30">neutralité</QW>
+			<W BOX="142 780 193 799" STYLE_REF="6" NS="y">suisse</W>
+			<W BOX="194 780 199 799" STYLE_REF="6">,</W>
+			<W BOX="208 780 221 799" STYLE_REF="6">si</W>
+			<W BOX="228 780 268 799" STYLE_REF="6">dans</W>
+			<W BOX="278 780 298 799" STYLE_REF="6">un</W>
+			<W BOX="313 780 375 799" STYLE_REF="6">combat</W>
+			<W BOX="391 780 463 799" STYLE_REF="6">sanglant</W>
+			<W BOX="479 780 490 799" STYLE_REF="6">il</W>
+		</Primitive>
+		<Primitive BOX="52 800 492 880" ID="Ar0030005" SEQ_NO="5" TOC_ENTRY_ID="12" DEPTH_LEVEL="1">
+			<L BOX="53 800 491 819"/>
+			<Q BOX="53 800 63 819" STYLE_REF="6" QID="31">n</Q>
+			<Q BOX="63 800 68 819" STYLE_REF="6" QID="31">'</Q>
+			<q BOX="68 800 126 819" STYLE_REF="6" NS="y" QID="31">obtieut</q>
+			<QW QID="31">n'obtieut</QW>
+			<W BOX="127 800 132 819" STYLE_REF="6">,</W>
+			<W BOX="140 800 179 819" STYLE_REF="6">dans</W>
+			<W BOX="187 800 202 819" STYLE_REF="6">le</W>
+			<W BOX="209 800 235 819" STYLE_REF="6">cas</W>
+			<W BOX="244 800 259 819" STYLE_REF="6">le</W>
+			<W BOX="274 800 308 819" STYLE_REF="6">plus</W>
+			<W BOX="323 800 404 819" STYLE_REF="6" NS="y">favorable</W>
+			<W BOX="405 800 410 819" STYLE_REF="6">,</W>
+			<Q BOX="430 800 442 819" STYLE_REF="6" QID="32">d</Q>
+			<Q BOX="442 800 446 819" STYLE_REF="6" QID="32">'</Q>
+			<q BOX="446 800 491 819" STYLE_REF="6" QID="32">autre</q>
+			<QW QID="32">d'autre</QW>
+			<L BOX="53 821 492 840"/>
+			<W BOX="53 821 114 840" STYLE_REF="6">résultat</W>
+			<W BOX="122 821 153 840" STYLE_REF="6">que</W>
+			<W BOX="162 821 182 840" STYLE_REF="6">de</W>
+			<W BOX="191 821 230 840" STYLE_REF="6">faire</W>
+			<W BOX="240 821 259 840" STYLE_REF="6">de</W>
+			<W BOX="268 821 282 840" STYLE_REF="6">la</W>
+			<W BOX="287 821 342 840" STYLE_REF="6" NS="y">Suisse</W>
+			<W BOX="343 821 348 840" STYLE_REF="6">,</W>
+			<W BOX="356 821 395 840" STYLE_REF="6">avec</W>
+			<W BOX="401 821 427 840" STYLE_REF="6">ses</W>
+			<W BOX="435 821 456 840" STYLE_REF="6" NS="y">80</W>
+			<W BOX="456 821 461 840" STYLE_REF="6" NS="y">,</W>
+			<W BOX="461 821 492 840" STYLE_REF="6">000</W>
+			<L BOX="52 841 492 860"/>
+			<W BOX="52 841 122 860" STYLE_REF="6" NS="y">hommes</W>
+			<W BOX="123 841 128 860" STYLE_REF="6">,</W>
+			<Q BOX="136 841 142 860" STYLE_REF="6" QID="33">l</Q>
+			<Q BOX="142 841 146 860" STYLE_REF="6" QID="33">'</Q>
+			<q BOX="146 841 192 860" STYLE_REF="6" QID="33">alliée</q>
+			<QW QID="33">l'alliée</QW>
+			<W BOX="202 841 278 860" STYLE_REF="6">naturelle</W>
+			<W BOX="287 841 306 860" STYLE_REF="6">de</W>
+			<W BOX="323 841 362 860" STYLE_REF="6">ceux</W>
+			<W BOX="378 841 404 860" STYLE_REF="6">qui</W>
+			<W BOX="421 841 492 860" STYLE_REF="6">auraient</W>
+			<L BOX="52 861 493 880"/>
+			<Q BOX="52 861 111 880" STYLE_REF="6" QID="34">respect</Q>
+			<q BOX="112 861 120 880" STYLE_REF="6" QID="34">é</q>
+			<QW QID="34">respecté</QW>
+			<W BOX="129 861 146 880" STYLE_REF="6">sa</W>
+			<Q BOX="158 861 232 880" STYLE_REF="6" QID="35">neutralit</Q>
+			<q BOX="233 861 242 880" STYLE_REF="6" QID="35">é</q>
+			<QW QID="35">neutralité</QW>
+			<W BOX="250 861 259 880" STYLE_REF="6">?</W>
+			<W BOX="272 861 312 880" STYLE_REF="6">Sous</W>
+			<W BOX="328 861 346 880" STYLE_REF="6">ce</W>
+			<W BOX="361 861 404 880" STYLE_REF="6">point</W>
+			<W BOX="419 861 439 880" STYLE_REF="6">de</W>
+			<W BOX="455 861 486 880" STYLE_REF="6" NS="y">vue</W>
+			<W BOX="488 861 493 880" STYLE_REF="6">,</W>
+		</Primitive>
+		<Primitive BOX="52 880 492 960" ID="Ar0030006" SEQ_NO="6" TOC_ENTRY_ID="12" DEPTH_LEVEL="1">
+			<L BOX="53 881 493 900"/>
+			<Q BOX="53 881 63 900" STYLE_REF="6" QID="36">n</Q>
+			<Q BOX="63 881 67 900" STYLE_REF="6" QID="36">'</Q>
+			<q BOX="67 881 85 900" STYLE_REF="6" QID="36">en</q>
+			<QW QID="36">n'en</QW>
+			<W BOX="102 881 172 900" STYLE_REF="6">déplaise</W>
+			<W BOX="188 881 196 900" STYLE_REF="6">à</W>
+			<W BOX="212 881 226 900" STYLE_REF="6">la</W>
+			<W BOX="240 881 300 900" STYLE_REF="5">Gazelle</W>
+			<W BOX="313 881 332 900" STYLE_REF="5">de</W>
+			<W BOX="338 881 354 900" STYLE_REF="5">la</W>
+			<W BOX="362 881 407 900" STYLE_REF="5" NS="y">Croix</W>
+			<W BOX="407 881 412 900" STYLE_REF="5">,</W>
+			<Q BOX="428 881 435 900" STYLE_REF="6" QID="37">l</Q>
+			<Q BOX="435 881 439 900" STYLE_REF="6" QID="37">'</Q>
+			<q BOX="439 881 493 900" STYLE_REF="6" QID="37">armée</q>
+			<QW QID="37">l'armée</QW>
+			<L BOX="51 901 493 920"/>
+			<W BOX="51 901 99 920" STYLE_REF="6">suisse</W>
+			<Q BOX="107 901 117 920" STYLE_REF="6" QID="38">n</Q>
+			<Q BOX="117 901 122 920" STYLE_REF="6" QID="38">'</Q>
+			<q BOX="122 901 146 920" STYLE_REF="6" QID="38">est</q>
+			<QW QID="38">n'est</QW>
+			<W BOX="154 901 181 920" STYLE_REF="6">pas</W>
+			<W BOX="189 901 209 920" STYLE_REF="6">un</W>
+			<W BOX="218 901 262 920" STYLE_REF="5">corps</W>
+			<W BOX="276 901 337 920" STYLE_REF="5">coûteux</W>
+			<W BOX="349 901 363 920" STYLE_REF="5">et</W>
+			<W BOX="371 901 434 920" STYLE_REF="5">onéreux</W>
+			<W BOX="455 901 493 920" STYLE_REF="5">pour</W>
+			<L BOX="53 921 492 940"/>
+			<W BOX="53 921 130 940" STYLE_REF="5">maintenir</W>
+			<W BOX="139 921 153 940" STYLE_REF="5">el</W>
+			<W BOX="159 921 166 940" STYLE_REF="5" NS="y">(</W>
+			<W BOX="166 921 198 940" STYLE_REF="5">aire</W>
+			<W BOX="208 921 282 940" STYLE_REF="5">respecter</W>
+			<W BOX="292 921 308 940" STYLE_REF="5">la</W>
+			<W BOX="313 921 362 940" STYLE_REF="5">police</W>
+			<W BOX="371 921 436 940" STYLE_REF="5" NS="y">fédérale</W>
+			<W BOX="436 921 441 940" STYLE_REF="5">,</W>
+			<W BOX="453 921 492 940" STYLE_REF="6">mais</W>
+			<L BOX="54 942 492 961"/>
+			<W BOX="54 942 73 961" STYLE_REF="6">un</W>
+			<W BOX="87 942 136 961" STYLE_REF="6">trésor</W>
+			<W BOX="151 942 252 961" STYLE_REF="6">inestimable</W>
+			<W BOX="267 942 306 961" STYLE_REF="6">pour</W>
+			<Q BOX="321 942 327 961" STYLE_REF="6" QID="39">l</Q>
+			<Q BOX="327 942 332 961" STYLE_REF="6" QID="39">'</Q>
+			<q BOX="332 942 449 961" STYLE_REF="6" QID="39">indépendance</q>
+			<QW QID="39">l'indépendance</QW>
+			<W BOX="471 942 492 961" STYLE_REF="6">du</W>
+		</Primitive>
+		<Primitive BOX="52 966 494 1090" ID="Ar0030007" SEQ_NO="7" TOC_ENTRY_ID="12" DEPTH_LEVEL="1">
+			<L BOX="52 962 97 981"/>
+			<W BOX="52 962 91 981" STYLE_REF="6" NS="y">pays</W>
+			<W BOX="92 962 97 981" STYLE_REF="6">.</W>
+			<L BOX="70 1008 493 1027" P="S"/>
+			<W BOX="70 1008 103 1027" STYLE_REF="6">Une</W>
+			<W BOX="110 1008 180 1027" STYLE_REF="6">dépêche</W>
+			<W BOX="189 1008 307 1027" STYLE_REF="6">télégraphique</W>
+			<W BOX="315 1008 335 1027" STYLE_REF="6">de</W>
+			<W BOX="351 1008 414 1027" STYLE_REF="6" NS="y">Vienne</W>
+			<W BOX="415 1008 420 1027" STYLE_REF="6">,</W>
+			<W BOX="436 1008 456 1027" STYLE_REF="6">du</W>
+			<W BOX="473 1008 493 1027" STYLE_REF="6">27</W>
+			<L BOX="55 1028 495 1047"/>
+			<W BOX="55 1028 104 1047" STYLE_REF="6" NS="y">Juillet</W>
+			<W BOX="104 1028 109 1047" STYLE_REF="6">,</W>
+			<W BOX="118 1028 190 1047" STYLE_REF="6">annonce</W>
+			<W BOX="199 1028 230 1047" STYLE_REF="6">que</W>
+			<W BOX="242 1028 265 1047" STYLE_REF="6">les</W>
+			<W BOX="279 1028 343 1047" STYLE_REF="6" NS="y">Suisses</W>
+			<W BOX="344 1028 349 1047" STYLE_REF="6">,</W>
+			<W BOX="365 1028 384 1047" STYLE_REF="6">au</W>
+			<W BOX="393 1028 459 1047" STYLE_REF="6">nombre</W>
+			<W BOX="475 1028 495 1047" STYLE_REF="6">de</W>
+			<L BOX="54 1049 495 1068"/>
+			<W BOX="54 1049 74 1068" STYLE_REF="6" NS="y">600</W>
+			<W BOX="74 1049 78 1068" STYLE_REF="6">,</W>
+			<Q BOX="96 1049 147 1068" STYLE_REF="6" QID="40">étaien</Q>
+			<q BOX="148 1049 153 1068" STYLE_REF="6" QID="40">t</q>
+			<QW QID="40">étaient</QW>
+			<W BOX="161 1049 180 1068" STYLE_REF="6">en</W>
+			<W BOX="190 1049 222 1068" STYLE_REF="6" NS="y">tête</W>
+			<W BOX="223 1049 228 1068" STYLE_REF="6">,</W>
+			<W BOX="237 1049 312 1068" STYLE_REF="6">bunnière</W>
+			<W BOX="321 1049 399 1068" STYLE_REF="6" NS="y">déployée</W>
+			<W BOX="400 1049 405 1068" STYLE_REF="6">,</W>
+			<W BOX="421 1049 441 1068" STYLE_REF="6">de</W>
+			<Q BOX="457 1049 463 1068" STYLE_REF="6" QID="41">l</Q>
+			<Q BOX="463 1049 467 1068" STYLE_REF="6" QID="41">'</Q>
+			<Q BOX="467 1049 488 1068" STYLE_REF="6" QID="41">im</Q>
+			<Q BOX="488 1049 495 1068" STYLE_REF="6" QID="41">-</Q>
+			<L BOX="56 1069 495 1088"/>
+			<q BOX="56 1069 102 1088" STYLE_REF="6" NS="y" QID="41">mense</q>
+			<QW QID="41">l'immense</QW>
+			<W BOX="101 1069 111 1088" STYLE_REF="6">»</W>
+			<W BOX="116 1069 179 1088" STYLE_REF="6">cortège</W>
+			<W BOX="198 1069 218 1088" STYLE_REF="6">de</W>
+			<W BOX="227 1069 282 1088" STYLE_REF="6">tirefers</W>
+			<W BOX="291 1069 311 1088" STYLE_REF="6">de</W>
+			<W BOX="325 1069 377 1088" STYLE_REF="6">toutes</W>
+			<W BOX="392 1069 453 1088" STYLE_REF="6">nations</W>
+			<W BOX="469 1069 495 1088" STYLE_REF="6">qui</W>
+		</Primitive>
+		<Primitive BOX="54 1088 496 1206" ID="Ar0030008" SEQ_NO="8" TOC_ENTRY_ID="12" DEPTH_LEVEL="1">
+			<L BOX="55 1089 495 1108"/>
+			<W BOX="55 1089 80 1108" STYLE_REF="6">fuis</W>
+			<W BOX="85 1089 105 1108" STYLE_REF="6">ait</W>
+			<W BOX="113 1089 141 1108" STYLE_REF="6">son</W>
+			<W BOX="150 1089 203 1108" STYLE_REF="6">entrée</W>
+			<W BOX="213 1089 251 1108" STYLE_REF="6">dans</W>
+			<W BOX="261 1089 275 1108" STYLE_REF="6">la</W>
+			<W BOX="282 1089 350 1108" STYLE_REF="6" NS="y">capitale</W>
+			<W BOX="351 1089 356 1108" STYLE_REF="6">.</W>
+			<W BOX="365 1089 389 1108" STYLE_REF="6">De</W>
+			<W BOX="397 1089 432 1108" STYLE_REF="6">tous</W>
+			<W BOX="440 1089 462 1108" STYLE_REF="6">les</W>
+			<Q BOX="470 1089 489 1108" STYLE_REF="6" QID="42">cô</Q>
+			<Q BOX="489 1089 495 1108" STYLE_REF="6" QID="42">-</Q>
+			<L BOX="55 1109 496 1128"/>
+			<q BOX="55 1109 76 1128" STYLE_REF="6" QID="42">tés</q>
+			<QW QID="42">côtés</QW>
+			<W BOX="84 1109 98 1128" STYLE_REF="6">le</W>
+			<W BOX="106 1109 127 1128" STYLE_REF="6">cri</W>
+			<W BOX="133 1109 153 1128" STYLE_REF="6">de</W>
+			<W BOX="162 1109 168 1128" STYLE_REF="6">:</W>
+			<W BOX="180 1109 190 1128" STYLE_REF="6">«</W>
+			<W BOX="197 1109 255 1128" STYLE_REF="6">Vivent</W>
+			<W BOX="264 1109 287 1128" STYLE_REF="6">les</W>
+			<W BOX="295 1109 357 1128" STYLE_REF="6">Suisses</W>
+			<W BOX="367 1109 374 1128" STYLE_REF="6">!</W>
+			<W BOX="380 1109 390 1128" STYLE_REF="6">»</W>
+			<Q BOX="396 1109 427 1128" STYLE_REF="6" QID="43">étai</Q>
+			<q BOX="427 1109 433 1128" STYLE_REF="6" QID="43">t</q>
+			<QW QID="43">était</QW>
+			<Q BOX="443 1109 487 1128" STYLE_REF="6" QID="44">répét</Q>
+			<q BOX="488 1109 496 1128" STYLE_REF="6" QID="44">é</q>
+			<QW QID="44">répété</QW>
+			<L BOX="54 1129 496 1148"/>
+			<W BOX="54 1129 90 1148" STYLE_REF="6">avec</W>
+			<W BOX="97 1129 127 1148" STYLE_REF="6">une</W>
+			<W BOX="136 1129 178 1148" STYLE_REF="6">sorte</W>
+			<W BOX="188 1129 207 1148" STYLE_REF="6">de</W>
+			<W BOX="216 1129 283 1148" STYLE_REF="6">frénésie</W>
+			<W BOX="300 1129 358 1148" STYLE_REF="6">auquel</W>
+			<W BOX="368 1129 391 1148" STYLE_REF="6">les</W>
+			<W BOX="399 1129 461 1148" STYLE_REF="6">Suisses</W>
+			<Q BOX="471 1129 488 1148" STYLE_REF="6" QID="45">ré</Q>
+			<Q BOX="489 1129 496 1148" STYLE_REF="6" QID="45">-</Q>
+			<L BOX="54 1149 495 1168"/>
+			<q BOX="54 1149 134 1168" STYLE_REF="6" QID="45">pondaient</q>
+			<QW QID="45">répondaient</QW>
+			<W BOX="143 1149 170 1168" STYLE_REF="6">par</W>
+			<W BOX="188 1149 228 1168" STYLE_REF="6">celui</W>
+			<W BOX="243 1149 263 1168" STYLE_REF="6">de</W>
+			<W BOX="272 1149 278 1168" STYLE_REF="6">:</W>
+			<W BOX="292 1149 302 1168" STYLE_REF="6">«</W>
+			<W BOX="308 1149 366 1168" STYLE_REF="6">Vivent</W>
+			<Q BOX="385 1149 391 1168" STYLE_REF="6" QID="46">l</Q>
+			<Q BOX="391 1149 395 1168" STYLE_REF="6" QID="46">'</Q>
+			<q BOX="395 1149 490 1168" STYLE_REF="6" NS="y" QID="46">Allemagne</q>
+			<QW QID="46">l'Allemagne</QW>
+			<W BOX="490 1149 495 1168" STYLE_REF="6">,</W>
+			<L BOX="55 1170 495 1189"/>
+			<Q BOX="55 1170 61 1189" STYLE_REF="6" QID="47">l</Q>
+			<Q BOX="61 1170 64 1189" STYLE_REF="6" QID="47">'</Q>
+			<q BOX="64 1170 136 1189" STYLE_REF="6" NS="y" QID="47">Autriche</q>
+			<QW QID="47">l'Autriche</QW>
+			<W BOX="136 1170 141 1189" STYLE_REF="6">,</W>
+			<W BOX="149 1170 211 1189" STYLE_REF="6">Vienne</W>
+			<W BOX="221 1170 228 1189" STYLE_REF="6">1</W>
+			<W BOX="233 1170 243 1189" STYLE_REF="6">»</W>
+			<W BOX="249 1170 309 1189" STYLE_REF="6">Jamais</W>
+			<W BOX="318 1170 367 1189" STYLE_REF="6">pareil</W>
+			<W BOX="377 1170 495 1189" STYLE_REF="6">enthousiasme</W>
+			<L BOX="55 1190 233 1209"/>
+			<W BOX="55 1190 73 1209" STYLE_REF="6">ne</W>
+			<Q BOX="79 1190 87 1209" STYLE_REF="6" QID="48">s</Q>
+			<Q BOX="87 1190 91 1209" STYLE_REF="6" QID="48">'</Q>
+			<Q BOX="91 1190 121 1209" STYLE_REF="6" QID="48">étai</Q>
+			<q BOX="122 1190 127 1209" STYLE_REF="6" QID="48">t</q>
+			<QW QID="48">s'était</QW>
+			<W BOX="137 1190 195 1209" STYLE_REF="6">encore</W>
+			<W BOX="206 1190 227 1209" STYLE_REF="6" NS="y">vu</W>
+			<W BOX="228 1190 233 1209" STYLE_REF="6">.</W>
+		</Primitive>
+	</Content>
+</XMD-entity>

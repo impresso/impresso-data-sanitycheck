@@ -1,0 +1,4 @@
+1	Res/PageImg/Page0001.tif	tif
+2	Res/PageImg/Page0002.tif	tif
+3	Res/PageImg/Page0003.tif	tif
+4	Res/PageImg/Page0004.tif	tif
