@@ -1,5 +1,17 @@
 # Data Sanity Check
 
+
+```
+├── README.md
+├── logs
+├── reports           => report files for text / images
+├── sanity_check      => scripts for text / images
+├── setup.py
+├── test-data      
+└── test_sanity_check => unit tests for text / images
+```
+
+
 ### Absence of data might be due to
 
 External factors:
