@@ -19,21 +19,17 @@ class TestRunCheckCanonical(TestCase):
     canon_dir = "../../test-data/canonical"
 
     # ref data for corpus 1
-    canonical_cases_one = {'issues w/o jp2': ['TESTIMGCANOONE/1900/01/13/a'],
-                           'issues w/ incorrect # infofile': [],
-                           'pages w/o jp2': ['TESTIMGCANOONE/1900/01/11/9'],
-                           'issues w/o infofile': ['TESTIMGCANOONE/1900/01/12/a'],
-                           'infofile w/ incorrect # img': [],
-                           'jp2 w/ incorrect filename': [],
-                           'jp2 w/o journalname': ['TESTIMGCANOONE/1900/01/11/a/GDL-1900-01-11-a-p0001.jp2'],
-                           'infofile w/o journalname': ['TESTIMGCANOONE/1900/01/11/a/1900-01-11-a-image-info.txt'],
-                           'jp2 w/ incorrect date': [],
-                           'infofile w/ incorrect date': []}
+    canonical_cases_one = {'pages w/o jp2': ['TESTIMGCANOONE/1900/01/11/9'],
+                           'jp2 w/ incorrect filename': ['TESTIMGCANOONE/1900/01/12/a/1900-01-12-a-p0001.jp2'],
+                           'jp2 w/o journalname': ['TESTIMGCANOONE/1900/01/12/a/1900-01-12-a-p0001.jp2'],
+                           'infofile w/o journalname': ['TESTIMGCANOONE/1900/01/12/a/GDL-1900-01-12-a-image-info.json'],
+                           'issues w/o jp2': ['TESTIMGCANOONE/1900/01/13/a'],
+                           'issues w/o infofile': ['TESTIMGCANOONE/1900/01/13/a']}
 
     images_counts_one = {'number tif': 8,
                          'number png': 8,
-                         'number jpg': 0,
-                         'total size jp2': 214552196,
+                         'number jpg': 4,
+                         'total size jp2': 214485588,
                          'number original page folders': 21,
                          'number canonical jp2': 20}
 
@@ -44,22 +40,16 @@ class TestRunCheckCanonical(TestCase):
                           'issues w/ corruptedzip': 0}
 
     # ref data for corpus 2
-    canonical_cases_two = {'issues w/o jp2': ['TESTIMGCANOTWO/1900/01/13/a'],
-                           'issues w/ incorrect # infofile': [],
-                           'pages w/o jp2': ['TESTIMGCANOTWO/1900/01/11/9'],
-                           'issues w/o infofile': ['TESTIMGCANOTWO/1900/01/12/a'],
-                           'infofile w/ incorrect # img': ['TESTIMGCANOTWO/1900/01/11/a/1900-01-11-a-image-info.txt'],
-                           'jp2 w/ incorrect filename': [],
-                           'jp2 w/o journalname': ['TESTIMGCANOTWO/1900/01/11/a/JDG-1900-01-11-a-p0001.jp2', 'TESTIMGCANOTWO/1900/01/11/a/GDL-1900-01-11-a-p0001.jp2'],
-                           'infofile w/o journalname': ['TESTIMGCANOTWO/1900/01/13/a/TESTIMGCANO2-1900-01-13-a-image-info.txt'],
-                           'jp2 w/ incorrect date': [], 'infofile w/ incorrect date': []}
+    canonical_cases_two = {'pages w/o jp2': ['TESTIMGCANOTWO/1900/01/11/9'],
+                           'issues w/o jp2': ['TESTIMGCANOTWO/1900/01/13/a'],
+                           'issues w/o infofile': ['TESTIMGCANOTWO/1900/01/13/a']}
 
     images_counts_two = {'number tif': 8,
                          'number png': 8,
-                         'number jpg': 0,
-                         'total size jp2': 237479561,
+                         'number jpg': 4,
+                         'total size jp2': 214951341,
                          'number original page folders': 21,
-                         'number canonical jp2': 21}
+                         'number canonical jp2': 20}
 
     journal_counts_two = {'number original issues': 5,
                           'number canonical issues': 5,

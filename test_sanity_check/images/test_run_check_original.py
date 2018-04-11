@@ -18,17 +18,11 @@ class TestRunCheckOriginal(TestCase):
     orig_dir = "../../test-data/original"
     newspapers = "ORIGTEST"
 
-    original_cases = {'issues w/o zip': ['ORIGTEST/1930/06/11'],
-                      'issues w/ corruptedzip': ['ORIGTEST/1881/02/26'],
-                      'issues_homogeneouscoverage_tifs': ['ORIGTEST/1900/01/10'],
-                      'issues_homogeneouscoverage_pngs': ['ORIGTEST/1900/01/11'],
+    original_cases = {'issues_homogeneouscoverage_tifs': ['ORIGTEST/1840/01/16', 'ORIGTEST/1900/01/10'],
+                      'issues w/o zip': ['ORIGTEST/1930/06/11'],
+                      'issues_homogeneouscoverage_pngs': ['ORIGTEST/1930/06/10', 'ORIGTEST/1900/01/11'],
                       'issues_homogeneouscoverage_jpgs': ['ORIGTEST/1900/01/12'],
-                      'issues_homogeneouscoverage_singlepngs': [],
-                      'issues_heterocoverage_all': [],
-                      'issues_heterocoverage_tif_png': [],
-                      'issues_heterocoverage_tif_jpg': [],
-                      'issues_heterocoverage_png_jpg': [],
-                      'issues_missing_pageimg': []}
+                      'issues w/ corruptedzip': ['ORIGTEST/1881/02/26']}
 
     journal_counts = {'number original issues': 7,
                       'number valid original issues': 5,
@@ -36,7 +30,12 @@ class TestRunCheckOriginal(TestCase):
                       'issues w/o small pdfs': 0,
                       'issues w/o both pdfs': 0,
                       'issues w both pdfs': 5,
-                      'number of pages': 28}
+                      'number of pages': 28,
+                      'number tif': 8,
+                      'number png': 72,
+                      'number jpg': 4}
+
+    maxDiff = None
 
     def test_run_check_original(self):
         journals = newspapers.split(" ")
