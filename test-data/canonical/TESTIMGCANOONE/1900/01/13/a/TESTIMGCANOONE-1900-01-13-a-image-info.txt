@@ -1,4 +1,0 @@
-1	1/Img/Pg001.jpg	jpg_uniq
-2	2/Img/Pg002.jpg	jpg_uniq
-3	3/Img/Pg003.jpg	jpg_uniq
-4	4/Img/Pg004.jpg	jpg_uniq

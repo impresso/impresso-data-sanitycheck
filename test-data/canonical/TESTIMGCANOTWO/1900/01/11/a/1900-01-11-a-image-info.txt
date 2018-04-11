@@ -1,8 +1,0 @@
-1	Img/Pg001_180.png	png_highest
-2	Img/Pg002_180.png	png_highest
-3	Img/Pg003_180.png	png_highest
-4	Img/Pg004_180.png	png_highest
-5	Img/Pg005_180.png	png_highest
-6	Img/Pg006_180.png	png_highest
-7	Img/Pg007_180.png	png_highest
-8	Img/Pg008_180.png	png_highest
