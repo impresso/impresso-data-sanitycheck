@@ -31,6 +31,7 @@ from dask import delayed
 from enum import Enum
 import time
 import humanize
+import json
 
 from impresso_commons.images import img_utils
 import impresso_commons.path as path
@@ -72,6 +73,7 @@ class CanonicalImageCase(Enum):
     infofile_wo_journalname = 'infofile w/o journalname'
     imagefile_wo_correctdate = 'jp2 w/ incorrect date'
     infofile_wo_correctdate = 'infofile w/ incorrect date'
+    jp2_wrongdimensions = 'jp2_wrongdimensions'
 
 
 class CanonicalImageStats(Enum):
@@ -102,6 +104,9 @@ class OriginalJournalStats(Enum):
     issues_missing_both_pdfs = 'issues w/o both pdfs'  # one pdf per page
     issues_having_both_pdfs = 'issues w both pdfs'  # one pdf per page
     number_pages = "number of pages"
+    number_tif = "number tif"
+    number_png = "number png"
+    number_jpg = "number jpg"
 
 
 def init_logger(mylogger, log_level, log_file):
@@ -208,10 +213,8 @@ def check_canonical_issue(issue_dir_original, issue_dir_canonical):
 
     # get canonical page material
     jp2 = glob.glob(os.path.join(issue_dir_canonical.path, "*.jp2"))
-    info = glob.glob(os.path.join(issue_dir_canonical.path, "*.txt"))
+    info = glob.glob(os.path.join(issue_dir_canonical.path, "*.json"))
 
-    # print(str(os.path.join(issue_dir_canonical.path, "*.jp2")))
-    # print(str(jp2))
     # jp2 simple check
     if not jp2:
         local_cases_dict.setdefault(CanonicalImageCase.issues_wo_jp2.value, []).append(short_cano)
@@ -276,22 +279,42 @@ def check_canonical_issue(issue_dir_original, issue_dir_canonical):
                 local_cases_dict.setdefault(CanonicalImageCase.page_wo_jp2.value, []).append(shortpage)
 
         # keep stats of source image format
-        nb_lines = 0
         with open(info[0]) as f:
-            for line in f:
-                nb_lines += 1
-                if "tif" in line:
+            info = json.load(f)
+            for i in info:
+                source = i["s"]
+                if "tif" in source:
                     local_stats_dict[CanonicalImageStats.number_tif.value] += 1
-                elif "png" in line:
+                elif "png" in source:
                     local_stats_dict[CanonicalImageStats.number_png.value] += 1
-                elif "jpg" in line:
+                elif "jpg" in source:
                     local_stats_dict[CanonicalImageStats.number_jpg.value] += 1
 
-        # check if same number of img reported in info file than in reality
-        if nb_lines != len(jp2):
-            local_cases_dict.setdefault(CanonicalImageCase.infofile_with_wrongnumber_img.value, []).append(
-                shortinfo)
+                sd = i["s_dim"]
+                dd = i["d_dim"]
+                if sd != dd:
+                    local_cases_dict.setdefault(CanonicalImageCase.jp2_wrongdimensions, []).append(
+                        shortinfo)
 
+            # check if same number of img reported in info file than in reality
+            if len(info) != len(jp2):
+                local_cases_dict.setdefault(CanonicalImageCase.infofile_with_wrongnumber_img.value, []).append(
+                    shortinfo)
+        # nb_lines = 0
+        # with open(info[0]) as f:
+        #     for line in f:
+        #         nb_lines += 1
+        #         if "tif" in line:
+        #             local_stats_dict[CanonicalImageStats.number_tif.value] += 1
+        #         elif "png" in line:
+        #             local_stats_dict[CanonicalImageStats.number_png.value] += 1
+        #         elif "jpg" in line:
+        #             local_stats_dict[CanonicalImageStats.number_jpg.value] += 1
+        #
+        # # check if same number of img reported in info file than in reality
+        # if nb_lines != len(jp2):
+        #     local_cases_dict.setdefault(CanonicalImageCase.infofile_with_wrongnumber_img.value, []).append(
+        #         shortinfo)
     return local_cases_dict, local_stats_dict
 
 
@@ -321,7 +344,7 @@ def check_original_issue(issue_dir_original):
             logger.info(f"Bad zip file in {short_orig}")
             return local_originalimagecase, local_statsjournal
 
-    # if archive ok, proceed:
+        # if archive ok, proceed:
         local_statsjournal[OriginalJournalStats.issues_valid.value] += 1
 
         # collect top dirs
@@ -333,6 +356,10 @@ def check_original_issue(issue_dir_original):
         tifs = img_utils.get_img_from_archive(archive, "Res/PageImg", ".tif")
         pngs = img_utils.get_img_from_archive(archive, "/Img", ".png", "/Pg")
         jpgs = img_utils.get_img_from_archive(archive, "/Img", ".jpg", "/Pg")
+
+        local_statsjournal[OriginalJournalStats.number_tif.value] += len(tifs)
+        local_statsjournal[OriginalJournalStats.number_png.value] += len(pngs)
+        local_statsjournal[OriginalJournalStats.number_jpg.value] += len(jpgs)
 
         # collect pdf
         ext = [".pdf", ".PDF"]
@@ -429,8 +456,6 @@ def check_canonical_journal(original_issues, canonical_issues, parallel_executio
     The objective is to compare original and canonical image folders, and do a series of checks.
     See the README.md for more details.
 
-    :param local_report:
-    :param global_report:
     :param original_issues:
     :param canonical_issues:
     :param parallel_execution:
@@ -441,14 +466,15 @@ def check_canonical_journal(original_issues, canonical_issues, parallel_executio
     pairs = path.pair_issue(original_issues, canonical_issues)
 
     # variables
-    canonical_cases = initialize_dict(CanonicalImageCase, [])
-    image_counts = initialize_dict(CanonicalImageStats, 0)
-    journal_counts = initialize_dict(CanonicalJournalStats, 0)
+    # canonical_cases = initialize_dict(CanonicalImageCase, [])
+    global_canonical_cases = {}
+    global_image_counts = initialize_dict(CanonicalImageStats, 0)
+    global_journal_counts = initialize_dict(CanonicalJournalStats, 0)
 
     # counts at journal level
-    journal_counts[CanonicalJournalStats.issues_orig.value] = len(original_issues)
-    journal_counts[CanonicalJournalStats.issues_canon.value] = len(canonical_issues)
-    journal_counts[CanonicalJournalStats.issues_pairs.value] = len(pairs)
+    global_journal_counts[CanonicalJournalStats.issues_orig.value] = len(original_issues)
+    global_journal_counts[CanonicalJournalStats.issues_canon.value] = len(canonical_issues)
+    global_journal_counts[CanonicalJournalStats.issues_pairs.value] = len(pairs)
 
     # prepare the execution of the import function
     tasks = [
@@ -464,13 +490,18 @@ def check_canonical_journal(original_issues, canonical_issues, parallel_executio
 
     # add local (issue) results to global (journal) results
     for cases, stats in results:
-        canonical_cases.update(cases)
+        for name, member in CanonicalImageCase.__members__.items():
+            for c in cases:
+                if c == member.value:
+                    global_canonical_cases.setdefault(member.value, []).append(cases[c][0])
+                    break
+
         for name, member in CanonicalImageStats.__members__.items():
             for c in stats:
                 if c == member.value:
-                    image_counts[member.value] += stats[c]
+                    global_image_counts[member.value] += stats[c]
                     break
-    return canonical_cases, image_counts, journal_counts
+    return global_canonical_cases, global_image_counts, global_journal_counts
 
 
 def check_original_journal(original_issues, parallel_execution):
@@ -486,7 +517,8 @@ def check_original_journal(original_issues, parallel_execution):
     """
 
     # variables
-    global_original_cases = initialize_dict(OriginalImageCase, [])
+    #global_original_cases = initialize_dict(OriginalImageCase, [])
+    global_original_cases = {}
     global_journal_counts = initialize_dict(OriginalJournalStats, 0)
 
     # counts at journal level
@@ -506,13 +538,17 @@ def check_original_journal(original_issues, parallel_execution):
 
     # handle results
     for local_cases, local_stats in results:
-        global_original_cases.update(local_cases)
+        for name, member in OriginalImageCase.__members__.items():
+            for c in local_cases:
+                if c == member.value:
+                    global_original_cases.setdefault(member.value, []).append(local_cases[c][0])
+                    break
+
         for name, member in OriginalJournalStats.__members__.items():
             for c in local_stats:
                 if c == member.value:
                     global_journal_counts[member.value] += local_stats[c]
                     break
-
     return global_original_cases, global_journal_counts
 
 
@@ -687,6 +723,7 @@ def run_check_original(command, journals, orig_dir, report_dir, parallel_executi
     fh_globalreport = open(f_globalreport, 'w')
 
     # header of global report
+    fh_globalreport.write(f"journal")
     for name, member in OriginalJournalStats.__members__.items():
         fh_globalreport.write(f" , {member.value}")
     for name, member in OriginalImageCase.__members__.items():
@@ -712,8 +749,6 @@ def run_check_original(command, journals, orig_dir, report_dir, parallel_executi
         # check
         journal_original_cases, journal_counts = check_original_journal(original_issues, parallel_execution)
 
-        print(str(journal_original_cases))
-        print(str(journal_counts))
         # print results
         print_originalreport(journal_original_cases, journal_counts, fh_globalreport, fh_localreport)
 
@@ -758,5 +793,20 @@ if __name__ == "__main__":
     main(arguments)
 
 # Executions on cluster:
-# for Le Temps:
-# check_images.py --original-dir=/mnt/impresso_syno --canonical-dir=/mnt/project_impresso/images --report-dir=../reports --newspapers="01_GDL 02_GDL 01_JDG 02_JDG LNQ" --command="check_canonical" --log-file=../logs/check-canonical-letemps.log
+# ORIGINAL batch 1
+# check_images.py --original-dir=/mnt/project_impresso/original/RERO --report-dir=../../reports/img_original --newspapers="BDC CDV EDA EXP JDV LCE LES LSR" --command="check_original" --log-file=../../logs/check-original-rero-batch1.log
+
+# ORIGINAL batch 2
+# check_images.py --original-dir=/mnt/project_impresso/original/RERO --report-dir=../../reports/img_original --newspapers="DLE IMP JDF LBP LCG LCR LCS LNF LSE LTF LVE" --command="check_original" --log-file=../../logs/check-original-rero-batch2.log
+
+# ORIGINAL batch 1 & 2
+# ./check_images.py --original-dir=/mnt/project_impresso/original/RERO --report-dir=../../reports/img_original --newspapers="BDC CDV EDA EXP JDV LCE LES LSR DLE IMP JDF LBP LCG LCR LCS LNF LSE LTF LVE" --command="check_original" --log-file=../../logs/check-original-rero-batch1-2.log
+
+# ORIGINAL LeTemps
+# check_images.py --original-dir=/mnt/impresso_syno --report-dir=../../reports/img_original --newspapers="01_GDL 02_GDL 01_JDG 02_JDG LNQ" --command="check_original" --log-file=../../logs/check-original-letemps.log
+
+# CANONICAL batch 1 & 2
+# check_images.py --original-dir=/mnt/project_impresso/original/RERO --canonical-dir=/mnt/project_impresso/images --report-dir=../../reports/img_canonical --newspapers="BDC CDV EDA EXP JDV LCE LES LSR DLE IMP JDF LBP LCG LCR LCS LNF LSE LTF LVE" --command="check_canonical" --log-file=../../logs/check-canonical-rero-batch1-2.log
+
+# CANONICAL Le Temps
+# check_images.py --original-dir=/mnt/impresso_syno --canonical-dir=/mnt/project_impresso/images --report-dir=../../reports/img_canonical --newspapers="01_GDL 02_GDL 01_JDG 02_JDG LNQ" --command="check_canonical" --log-file=../../logs/check-canonical-letemps.log
