@@ -1,2 +1,0 @@
- , number original issues , number valid original issues , issues w/o large pdf , issues w/o small pdfs , issues w/o both pdfs , issues w both pdfs , number of pages , issues w/o zip , issues w/ corruptedzip , issues_homogeneouscoverage_tifs , issues_homogeneouscoverage_pngs , issues_homogeneouscoverage_jpgs , issues_homogeneouscoverage_singlepngs , issues_heterocoverage_all , issues_heterocoverage_tif_png , issues_heterocoverage_tif_jpg , issues_heterocoverage_png_jpg , issues_missing_pageimg
-ORIGTEST, 7, 5, 0, 0, 0, 5, 28, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 
