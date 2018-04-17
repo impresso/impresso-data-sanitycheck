@@ -99,10 +99,8 @@ class OriginalJournalStats(Enum):
     """ Journal-related stats in Olive original archives."""
     issues_orig = "number original issues"
     issues_valid = "number valid original issues"
-    issues_missing_large_pdf = 'issues w/o large pdf'  # one pdf per issue
-    issues_missing_small_pdfs = 'issues w/o small pdfs'  # one pdf per page
-    issues_missing_both_pdfs = 'issues w/o both pdfs'  # one pdf per page
-    issues_having_both_pdfs = 'issues w both pdfs'  # one pdf per page
+    issues_with_large_pdf = 'issues w large pdf'  # one pdf per issue
+    issues_with_small_pdfs = 'issues w small pdfs'  # one pdf per page
     number_pages = "number of pages"
     number_tif = "number tif"
     number_png = "number png"
@@ -362,19 +360,17 @@ def check_original_issue(issue_dir_original):
         local_statsjournal[OriginalJournalStats.number_jpg.value] += len(jpgs)
 
         # collect pdf
-        ext = [".pdf", ".PDF"]
+        ext = ["*.pdf", "*.PDF"]
         big_pdfs = []
         small_pdfs = []
         for e in ext:
-            big_pdfs.append(glob.glob(os.path.join(issue_dir_original.path, e)))
-            small_pdfs.append(glob.glob(os.path.join(issue_dir_original.path, "Res", "PDF", e)))
+            big_pdfs.extend(glob.glob(os.path.join(issue_dir_original.path, e)))
+            small_pdfs.extend(glob.glob(os.path.join(issue_dir_original.path, "Res", "PDF", e)))
 
-        if big_pdfs and small_pdfs:
-            local_statsjournal[OriginalJournalStats.issues_having_both_pdfs.value] += 1
-        if not big_pdfs:
-            local_statsjournal[OriginalJournalStats.issues_missing_large_pdf.value] += 1
-        if not small_pdfs:
-            local_statsjournal[OriginalJournalStats.issues_missing_small_pdf.value] += 1
+        if big_pdfs:
+            local_statsjournal[OriginalJournalStats.issues_with_large_pdf.value] += 1
+        if small_pdfs:
+            local_statsjournal[OriginalJournalStats.issues_with_small_pdfs.value] += 1
 
         # init counters
         pages_with_tifs = 0
@@ -803,10 +799,12 @@ if __name__ == "__main__":
 # ./check_images.py --original-dir=/mnt/project_impresso/original/RERO --report-dir=../../reports/img_original --newspapers="BDC CDV EDA EXP JDV LCE LES LSR DLE IMP JDF LBP LCG LCR LCS LNF LSE LTF LVE" --command="check_original" --log-file=../../logs/check-original-rero-batch1-2.log
 
 # ORIGINAL LeTemps
-# check_images.py --original-dir=/mnt/impresso_syno --report-dir=../../reports/img_original --newspapers="01_GDL 02_GDL 01_JDG 02_JDG LNQ" --command="check_original" --log-file=../../logs/check-original-letemps.log
+# check_images.py --original-dir=/mnt/impresso_syno --report-dir=../../reports/img_original --newspapers="01_GDL 02_GDL 01_JDG 02_JDG 02_LNQ" --command="check_original" --log-file=../../logs/check-original-letemps.log
 
 # CANONICAL batch 1 & 2
 # check_images.py --original-dir=/mnt/project_impresso/original/RERO --canonical-dir=/mnt/project_impresso/images --report-dir=../../reports/img_canonical --newspapers="BDC CDV EDA EXP JDV LCE LES LSR DLE IMP JDF LBP LCG LCR LCS LNF LSE LTF LVE" --command="check_canonical" --log-file=../../logs/check-canonical-rero-batch1-2.log
 
 # CANONICAL Le Temps
-# check_images.py --original-dir=/mnt/impresso_syno --canonical-dir=/mnt/project_impresso/images --report-dir=../../reports/img_canonical --newspapers="01_GDL 02_GDL 01_JDG 02_JDG LNQ" --command="check_canonical" --log-file=../../logs/check-canonical-letemps.log
+# check_images.py --original-dir=/mnt/impresso_syno --canonical-dir=/mnt/project_impresso/images --report-dir=../../reports/img_canonical --newspapers="01_GDL 02_GDL 01_JDG 02_JDG 02_LNQ" --command="check_canonical" --log-file=../../logs/check-canonical-letemps.log
+
+
