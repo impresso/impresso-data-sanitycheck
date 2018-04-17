@@ -1,0 +1,6 @@
+journal , number original issues , number valid original issues , issues w large pdf , issues w small pdfs , issues w/o both pdfs , number of pages , number tif , number png , number jpg , issues w/o zip , issues w/ corruptedzip , issues_homogeneouscoverage_tifs , issues_homogeneouscoverage_pngs , issues_homogeneouscoverage_jpgs , issues_homogeneouscoverage_singlepngs , issues_heterocoverage_all , issues_heterocoverage_tif_png , issues_heterocoverage_tif_jpg , issues_heterocoverage_png_jpg , issues_missing_pageimg
+01_GDL, 45595, 45586, 45586, 45586, 0, 285561, 285561, 856683, 0, , 9, 45586, , , , , , , , , 
+02_GDL, 5774, 5773, 5773, 5773, 0, 161294, 161294, 483882, 0, , 1, 5773, , , , , , , , , 
+01_JDG, 42120, 42120, 42120, 42120, 0, 302200, 262090, 906600, 0, , , 32305, 9812, , , , 3, , , , 
+02_JDG, 7669, 7669, 7669, 7669, 0, 204606, 204596, 613818, 0, , , 7666, , , , , 3, , , , 
+02_LNQ, 1710, 1709, 1709, 1709, 0, 62213, 62213, 186639, 0, , 1, 1709, , , , , , , , , 
