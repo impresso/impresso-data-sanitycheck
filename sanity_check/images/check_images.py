@@ -151,7 +151,8 @@ def check_image_pairs(page_folders, jp2):
         d[i] = ""
     # check if original pages have a jp2
     for page in page_folders:
-        p = page[-1:].zfill(4)
+        x = page.split('/')[-1]
+        p = x.zfill(4)
         if p not in d:
             res.append(page)
     return res
@@ -682,7 +683,9 @@ def run_check_canonical(command, journals, orig_dir, canon_dir, report_dir, para
 
         # detect issues to consider for current journal
         original_issues = path.detect_journal_issues(orig_dir, journal)
-        canonical_issues = path.detect_canonical_issues(canon_dir, journal)
+        canonical_issues = path.detect_canonical_issues(canon_dir, [journal])
+        print(f"{canon_dir} {journal}")
+
         logger.info(f"Found {len(original_issues)} original and {len(canonical_issues)} canonical issues to check")
         print(f"Found {len(original_issues)} original and {len(canonical_issues)} canonical issues to check")
 
