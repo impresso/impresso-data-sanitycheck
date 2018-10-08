@@ -100,3 +100,10 @@ Goes in the DB:
 
 
 
+## Commands
+
+**canonical_check**
+
+```
+check_images.py --original-dir=/mnt/project_impresso/original/RERO --report-dir=../../reports/img_original --newspapers="BDC CDV EDA EXP JDV LCE LES LSR" --command="check_original" --log-file=../../logs/check-original-rero-batch1.log
+```
