@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+impresso_commons = {git = "https://github.com/impresso/impresso-pycommons.git", editable = true}
+docopt = "*"
+humanize = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
