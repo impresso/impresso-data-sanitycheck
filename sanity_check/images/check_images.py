@@ -7,18 +7,16 @@
 Impresso project: Sanity check for images, original and canonical
 
 Usage:
-    check-image.py --command==<c> --newspapers=<np> --original-dir=<od> [--canonical-dir=<cd>  --report-dir==<rd>  --log-file=<lf> --verbose --parallelize]
+    check-image.py --command==<c> --newspapers=<np> --original-dir=<od> [--canonical-dir=<cd>  --report-dir==<rd>  --log-file=<lf> --verbose ]
 
 Options:
     --command=<c>       Command to be executed, 'check_original' or 'check_canonical'
-    --original-dir=<od>    Base directory containing one sub-directory for each journal.
-    --canonical-dir=<cd>    Base directory containing one sub-directory for each journal.
-    --newspapers=<np>   List of titles to be considered, as blank separated terms. "EXP GDL"
-    --report-dir==<rd>  Directory where to write the report files.
-    --log-file=<lf>      Log file; when missing print log to stdout
-    --verbose           Verbose log messages (good for debugging).
-    --parallelize       Parallelize the import.
-
+    --original-dir=<od>    original data directory containing one sub-directory for each journal.
+    --canonical-dir=<cd>    image directory containing one sub-directory for each journal.
+    --newspapers=<np>   list of titles to be considered, as blank separated terms. "EXP GDL"
+    --report-dir==<rd>  directory where to write the report files.
+    --log-file=<lf>      log file; when missing stdout is used
+    --verbose           verbose log messages (good for debugging).
 """
 
 import docopt
@@ -28,13 +26,17 @@ import zipfile
 from collections import defaultdict
 import glob
 from dask import delayed
+import dask.bag as db
+from dask.diagnostics import ProgressBar
 from enum import Enum
 import time
 import humanize
 import json
 
+
+
 from impresso_commons.images import img_utils
-import impresso_commons.path as path
+import impresso_commons.path_fs as path
 import impresso_commons.utils as utils
 
 logger = logging.getLogger(__name__)
@@ -74,6 +76,8 @@ class CanonicalImageCase(Enum):
     imagefile_wo_correctdate = 'jp2 w/ incorrect date'
     infofile_wo_correctdate = 'infofile w/ incorrect date'
     jp2_wrongdimensions = 'jp2_wrongdimensions'
+    issues_wo_zip = 'issues w/o zip'
+    issues_with_corruptedzip = 'issues w/ corruptedzip'
 
 
 class CanonicalImageStats(Enum):
@@ -158,7 +162,8 @@ def check_image_pairs(page_folders, jp2):
     return res
 
 
-def check_canonical_issue(issue_dir_original, issue_dir_canonical):
+#def check_canonical_issue(issue_dir_original, issue_dir_canonical):
+def check_canonical_issue(issue_pair):
     """ Parses the impresso original and canonical image directories and detects anomalies.
 
     :param issue_dir_original: the original issue in the source folder
@@ -187,13 +192,15 @@ def check_canonical_issue(issue_dir_original, issue_dir_canonical):
 
     This information is added up at journal level by the L{run_check_canonical} function.
     """
+    issue_dir_original = issue_pair[0]
+    issue_dir_canonical = issue_pair[1]
 
     logger.debug(f"Checking the following issues: {issue_dir_original.path} and {issue_dir_canonical.path}")
 
     # variables
     short_cano = path.get_issueshortpath(issue_dir_canonical)
+    short_orig = path.get_issueshortpath(issue_dir_original)
 
-    # local_cases_dict = initialize_dict(CanonicalImageCase, [])  # keep the paths (values) of problematic 'CanonicalImageCase' (key)
     local_cases_dict = {}  # keep the paths (values) of problematic 'CanonicalImageCase' (key)
     local_stats_dict = initialize_dict(CanonicalImageStats, 0)  # keep counts of image formats
     page_folders = []
@@ -201,7 +208,9 @@ def check_canonical_issue(issue_dir_original, issue_dir_canonical):
 
     # get original page folders (to compare with what is produced on the canonical side)
     working_archive = os.path.join(issue_dir_original.path, "Document.zip")
-    if os.path.isfile(working_archive):
+    if not os.path.isfile(working_archive):
+        local_cases_dict.setdefault(CanonicalImageCase.issues_wo_zip.value, []).append(short_orig)
+    else:
         try:
             archive = zipfile.ZipFile(working_archive)
             page_folders = img_utils.get_page_folders(archive)
@@ -209,112 +218,103 @@ def check_canonical_issue(issue_dir_original, issue_dir_canonical):
             local_stats_dict[CanonicalImageStats.number_original_pagefolder.value] += len(page_folders)
         except zipfile.BadZipfile as e:
             logger.info(f"Bad zip file in {issue_dir_original.path}")
+            local_cases_dict.setdefault(CanonicalImageCase.issues_with_corruptedzip.value, []).append(
+                short_orig)
+            return local_cases_dict, local_stats_dict
 
-    # get canonical page material
-    jp2 = glob.glob(os.path.join(issue_dir_canonical.path, "*.jp2"))
-    info = glob.glob(os.path.join(issue_dir_canonical.path, "*.json"))
+        # if archive ok, proceed:
 
-    # jp2 simple check
-    if not jp2:
-        local_cases_dict.setdefault(CanonicalImageCase.issues_wo_jp2.value, []).append(short_cano)
-    else:
-        # store number of jp2
-        local_stats_dict[CanonicalImageStats.number_canonical_jp2.value] += len(jp2)
-        # check img names comply with naming convention
-        jp2_bytes = 0
-        for img_file in jp2:
+        # get canonical page material
+        jp2 = glob.glob(os.path.join(issue_dir_canonical.path, "*.jp2"))
+        info = glob.glob(os.path.join(issue_dir_canonical.path, "*.json"))
+        logger.debug(f"found info file: {info}")
 
-            # get short path and basename of jp2
-            shortjp2 = img_file[img_file.index(issue_dir_canonical.journal):]
-            basename = os.path.splitext(os.path.basename(img_file))[0]
+        # jp2 simple check
+        if not jp2:
+            local_cases_dict.setdefault(CanonicalImageCase.issues_wo_jp2.value, []).append(short_cano)
+        else:
+            # store number of jp2
+            local_stats_dict[CanonicalImageStats.number_canonical_jp2.value] += len(jp2)
+            # check img names comply with naming convention
+            jp2_bytes = 0
+            for img_file in jp2:
 
-            # jp2 does not comply with naming convention
-            if not path.check_filenaming(basename):
-                local_cases_dict.setdefault(CanonicalImageCase.image_incorrect_filename.value, []).append(shortjp2)
+                # get short path and basename of jp2
+                shortjp2 = img_file[img_file.index(issue_dir_canonical.journal):]
+                basename = os.path.splitext(os.path.basename(img_file))[0]
 
-            # jp2 does not contain the journal acronym
-            if issue_dir_original.journal not in basename:
-                local_cases_dict.setdefault(CanonicalImageCase.imagefile_wo_journalname.value, []).append(shortjp2)
+                # jp2 does not comply with naming convention
+                if not path.check_filenaming(basename):
+                    local_cases_dict.setdefault(CanonicalImageCase.image_incorrect_filename.value, []).append(shortjp2)
 
-            # jp2 does not contain the issue date
-            if str(issue_dir_original.date) not in basename:
-                local_cases_dict.setdefault(CanonicalImageCase.imagefile_wo_correctdate.value, []).append(shortjp2)
+                # jp2 does not contain the journal acronym
+                if issue_dir_original.journal not in basename:
+                    local_cases_dict.setdefault(CanonicalImageCase.imagefile_wo_journalname.value, []).append(shortjp2)
 
-            # get size of jp2
-            jp2_bytes += os.path.getsize(img_file)
-            local_stats_dict[CanonicalImageStats.size_jp2.value] += jp2_bytes
+                # jp2 does not contain the issue date
+                if str(issue_dir_original.date) not in basename:
+                    local_cases_dict.setdefault(CanonicalImageCase.imagefile_wo_correctdate.value, []).append(shortjp2)
 
-    # info simple check
-    if not info:
-        local_cases_dict.setdefault(CanonicalImageCase.issues_wo_infofile.value, []).append(short_cano)
-    else:
-        # short path of info file
-        shortinfo = info[0][info[0].index(issue_dir_canonical.journal):]
+                # get size of jp2
+                jp2_bytes += os.path.getsize(img_file)
+                local_stats_dict[CanonicalImageStats.size_jp2.value] += jp2_bytes
 
-        # check number of info file
-        if len(info) != 1:
-            local_cases_dict.setdefault(CanonicalImageCase.issues_with_wrongnumber_infofile.value, []).append(
-                short_cano)
+        # info simple check
+        if not info:
+            local_cases_dict.setdefault(CanonicalImageCase.issues_wo_infofile.value, []).append(short_cano)
+        else:
+            # short path of info file
+            shortinfo = info[0][info[0].index(issue_dir_canonical.journal):]
 
-        # get basename of info file
-        baseinfo = os.path.basename(info[0])
-        infojournal = baseinfo[:baseinfo.index("-")]
+            # check number of info file
+            if len(info) != 1:
+                local_cases_dict.setdefault(CanonicalImageCase.issues_with_wrongnumber_infofile.value, []).append(
+                    short_cano)
 
-        # info file does not contain journal name
-        if issue_dir_original.journal != infojournal:
-            local_cases_dict.setdefault(CanonicalImageCase.infofile_wo_journalname.value, []).append(shortinfo)
+            # get basename of info file
+            baseinfo = os.path.basename(info[0])
+            infojournal = baseinfo[:baseinfo.index("-")]
 
-        # info file does not contain the issue date
-        if str(issue_dir_original.date) not in baseinfo:
-            local_cases_dict.setdefault(CanonicalImageCase.infofile_wo_correctdate.value, []).append(shortinfo)
+            # info file does not contain journal name
+            if issue_dir_original.journal != infojournal:
+                local_cases_dict.setdefault(CanonicalImageCase.infofile_wo_journalname.value, []).append(shortinfo)
 
-    # info and jp2 detailed check
-    if info and jp2:
-        # check if all original pages have a corresponding canonical image
-        list_pages_wo_jp2 = check_image_pairs(page_folders, jp2)
-        if list_pages_wo_jp2:
-            for page in list_pages_wo_jp2:
-                shortpage = page[page.index(issue_dir_canonical.journal):]
-                local_cases_dict.setdefault(CanonicalImageCase.page_wo_jp2.value, []).append(shortpage)
+            # info file does not contain the issue date
+            if str(issue_dir_original.date) not in baseinfo:
+                local_cases_dict.setdefault(CanonicalImageCase.infofile_wo_correctdate.value, []).append(shortinfo)
 
-        # keep stats of source image format
-        with open(info[0]) as f:
-            info = json.load(f)
-            for i in info:
-                source = i["s"]
-                if "tif" in source:
-                    local_stats_dict[CanonicalImageStats.number_tif.value] += 1
-                elif "png" in source:
-                    local_stats_dict[CanonicalImageStats.number_png.value] += 1
-                elif "jpg" in source:
-                    local_stats_dict[CanonicalImageStats.number_jpg.value] += 1
+        # info and jp2 detailed check
+        if info and jp2:
+            # check if all original pages have a corresponding canonical image
+            list_pages_wo_jp2 = check_image_pairs(page_folders, jp2)
+            if list_pages_wo_jp2:
+                for page in list_pages_wo_jp2:
+                    shortpage = page[page.index(issue_dir_canonical.journal):]
+                    local_cases_dict.setdefault(CanonicalImageCase.page_wo_jp2.value, []).append(shortpage)
 
-                sd = i["s_dim"]
-                dd = i["d_dim"]
-                if sd != dd:
-                    local_cases_dict.setdefault(CanonicalImageCase.jp2_wrongdimensions, []).append(
+            # keep stats of source image format
+            with open(info[0]) as f:
+                info = json.load(f)
+                for i in info:
+                    source = i["s"]
+                    if "tif" in source:
+                        local_stats_dict[CanonicalImageStats.number_tif.value] += 1
+                    elif "png" in source:
+                        local_stats_dict[CanonicalImageStats.number_png.value] += 1
+                    elif "jpg" in source:
+                        local_stats_dict[CanonicalImageStats.number_jpg.value] += 1
+
+                    sd = i["s_dim"]
+                    dd = i["d_dim"]
+                    if sd != dd:
+                        local_cases_dict.setdefault(CanonicalImageCase.jp2_wrongdimensions, []).append(
+                            shortinfo)
+
+                # check if same number of img reported in info file than in reality
+                if len(info) != len(jp2):
+                    local_cases_dict.setdefault(CanonicalImageCase.infofile_with_wrongnumber_img.value, []).append(
                         shortinfo)
-
-            # check if same number of img reported in info file than in reality
-            if len(info) != len(jp2):
-                local_cases_dict.setdefault(CanonicalImageCase.infofile_with_wrongnumber_img.value, []).append(
-                    shortinfo)
-        # nb_lines = 0
-        # with open(info[0]) as f:
-        #     for line in f:
-        #         nb_lines += 1
-        #         if "tif" in line:
-        #             local_stats_dict[CanonicalImageStats.number_tif.value] += 1
-        #         elif "png" in line:
-        #             local_stats_dict[CanonicalImageStats.number_png.value] += 1
-        #         elif "jpg" in line:
-        #             local_stats_dict[CanonicalImageStats.number_jpg.value] += 1
-        #
-        # # check if same number of img reported in info file than in reality
-        # if nb_lines != len(jp2):
-        #     local_cases_dict.setdefault(CanonicalImageCase.infofile_with_wrongnumber_img.value, []).append(
-        #         shortinfo)
-    return local_cases_dict, local_stats_dict
+        return local_cases_dict, local_stats_dict
 
 
 def check_original_issue(issue_dir_original):
@@ -474,16 +474,23 @@ def check_canonical_journal(original_issues, canonical_issues, parallel_executio
     global_journal_counts[CanonicalJournalStats.issues_pairs.value] = len(pairs)
 
     # prepare the execution of the import function
-    tasks = [
-        delayed(check_canonical_issue)(orig, can)
-        for orig, can in pairs
-    ]
+    # tasks = [
+    #     delayed(check_canonical_issue)(orig, can)
+    #     for orig, can in pairs
+    # ]
 
     print(f"\nChecking {len(pairs)} issues pairs...(parallelized={parallel_execution})")
     logger.info(f"\nChecking {len(pairs)} issues pairs...(parallelized={parallel_execution})")
 
     # execute tasks
-    results = utils.executetask(tasks, parallel_execution)
+    # results = utils.executetask(tasks, parallel_execution)
+
+    # with bags
+    bag = db.from_sequence(pairs)
+    bag_processed = bag.map(check_canonical_issue)
+    with ProgressBar():
+        results = bag_processed.compute()
+
 
     # add local (issue) results to global (journal) results
     for cases, stats in results:
