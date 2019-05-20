@@ -4,11 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-impresso_commons = {git = "https://github.com/impresso/impresso-pycommons.git", editable = true}
+impresso_commons = {git = "https://github.com/impresso/impresso-pycommons.git",editable = true}
 docopt = "*"
 humanize = "*"
+requests = "*"
+tqdm = "*"
+impresso-db = {editable = true,path = "./../impresso-master-db"}
+dask = {extras = ["complete"],version = "*"}
 
 [dev-packages]
+jupyter = "*"
 
 [requires]
 python_version = "3.6"
