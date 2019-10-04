@@ -49,16 +49,67 @@ def list_issues(bucket_name=S3_CANONICAL_DATA_BUCKET):
     return issue_files
 
 
-# TODO: implement
+def list_pages(bucket_name=S3_CANONICAL_DATA_BUCKET):
+    if bucket_name:
+        newspapers = list_newspapers(bucket_name)
+    else:
+        newspapers = list_newspapers()
+
+    page_files = db.from_sequence(newspapers).map(
+        lambda np: fixed_s3fs_glob(
+            f"{os.path.join(bucket_name, f'{np}/pages/*')}"
+        )
+    ).flatten().compute()
+    """
+    page_files = [
+        file
+        for np in newspapers
+        for file in fixed_s3fs_glob(
+            f"{os.path.join(bucket_name, f'{np}/pages/*')}"
+        )
+    ]
+    """
+    print(f'{bucket_name} contains {len(page_files)} .bz2 files')
+    return page_files
+
+
+def list_files_rebuilt(bucket_name=S3_REBUILT_DATA_BUCKET):
+    if bucket_name:
+        newspapers = list_newspapers(bucket_name)
+    else:
+        newspapers = list_newspapers()
+    rebuilt_files = [
+        file
+        for np in newspapers
+        for file in fixed_s3fs_glob(
+            f"{os.path.join(bucket_name, f'{np}/*')}"
+        )
+    ]
+    print(f'{bucket_name} contains {len(rebuilt_files)} .bz2 files')
+    return rebuilt_files
+
+
 def fetch_issue_ids_rebuilt(bucket_name=S3_REBUILT_DATA_BUCKET, compute=True):
     """
-    since any rebuilt is organized by content items, we need to:
-        - take all content item ids
-        - parse them and take the newspaper id bit
-        - do a set on the result
-    (it will take a while as it has to parse all data to take the id)
+    Derive issue IDs from an s3 bucket with rebuilt data.
+
+    Since rebuilt data is organized by content item and not by issue, we need
+    to parse all content items IDs in rebuilt data and derive issue IDs.
     """
-    pass
+    rebuilt_files = list_files_rebuilt(bucket_name)
+    ci_bag = db.read_text(
+        rebuilt_files,
+        storage_options=IMPRESSO_STORAGEOPT
+    ).map(
+        json.loads
+    ).map(
+        lambda ci: '-'.join(ci['id'].split('-')[:-1])
+    ).distinct()
+
+    if compute:
+        return ci_bag.compute()
+    else:
+        return ci_bag
 
 
 def fetch_issues(bucket_name=S3_CANONICAL_DATA_BUCKET, compute=True):
@@ -82,11 +133,19 @@ def fetch_issues(bucket_name=S3_CANONICAL_DATA_BUCKET, compute=True):
         return issue_bag
 
 
-def fetch_issue_ids(bucket_name=S3_CANONICAL_DATA_BUCKET, compute=True):
+def fetch_issue_ids(
+    bucket_name=S3_CANONICAL_DATA_BUCKET,
+    compute=True,
+    issue_bag=None
+):
     """
     Fetch newspaper issue IDs from an s3 bucket with impresso canonical data.
     """
-    issue_bag = fetch_issues(bucket_name, compute=False)
+    if not issue_bag:
+        issue_bag = fetch_issues(bucket_name, compute=False)
+    else:
+        print(f'using input issue bag {issue_bag}')
+
     issue_id_bag = issue_bag.pluck('id')
 
     if compute:
@@ -95,5 +154,31 @@ def fetch_issue_ids(bucket_name=S3_CANONICAL_DATA_BUCKET, compute=True):
         return issue_id_bag
 
 
-def fetch_page_ids():
-    pass
+# TODO: add  possibility to do it only for certain newspapers
+def fetch_page_ids(
+    bucket_name=S3_CANONICAL_DATA_BUCKET,
+    source="issues",
+    issue_bag=None
+):
+
+    valid_sources = ["issues", "pages"]
+    assert source in valid_sources
+
+    if issue_bag is None:
+        issue_bag = fetch_issues(
+            S3_CANONICAL_DATA_BUCKET,
+            compute=False
+        ).filter(lambda i: len(i) > 0)
+
+    if source == "issues":
+
+        print(f'Fetching page IDs from {source}')
+
+        # no need to recompute the issues
+        if issue_bag:
+            pass
+        else:
+            issue_bag = fetch_issues(compute=False)
+        return issue_bag.map(lambda i: i['pp']).flatten().compute()
+    else:
+        pass
