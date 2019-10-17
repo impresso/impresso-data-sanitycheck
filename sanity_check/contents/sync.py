@@ -74,8 +74,14 @@ def check_sync_rebuilt(
     Return a dataframe with detailed information.
     """
 
-    s3_canonical_issues = fetch_issue_ids(compute=False)
-    s3_rebuilt_issues = fetch_issue_ids_rebuilt(compute=False)
+    s3_canonical_issues = fetch_issue_ids(
+        canonical_bucket_name,
+        compute=False
+    )
+    s3_rebuilt_issues = fetch_issue_ids_rebuilt(
+        rebuilt_bucket_name,
+        compute=False
+    )
 
     s3_rebuilt_data = s3_rebuilt_issues.map(
         lambda i: {'id': i, "in_rebuilt": True}
