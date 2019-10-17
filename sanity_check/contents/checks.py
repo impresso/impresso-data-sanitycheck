@@ -59,7 +59,7 @@ def check_duplicated_issues_IDs(issue_bag):
 
 # TODO: test
 def check_inconsistent_page_ids(
-    issue_bag: bag
+    canonical_bucket_name: str
 ) -> pd.DataFrame:
     """Check whether there are mismatches between page IDs.
 
@@ -72,8 +72,14 @@ def check_inconsistent_page_ids(
     we need to verify that all page IDs in #1 are contained within #2.
     """
 
-    page_ids_from_issues = fetch_page_ids(source="issues")
-    page_ids_from_pages = fetch_page_ids(source="pages")
+    page_ids_from_issues = fetch_page_ids(
+        canonical_bucket_name,
+        source="issues"
+    )
+    page_ids_from_pages = fetch_page_ids(
+        canonical_bucket_name,
+        source="pages"
+    )
 
     df_page_ids_from_issues = bag.from_sequence(set(page_ids_from_issues)).map(
         lambda id: {"id": id, "from_issues": True}
