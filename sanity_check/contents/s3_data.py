@@ -166,7 +166,7 @@ def fetch_page_ids(
 
     if issue_bag is None:
         issue_bag = fetch_issues(
-            S3_CANONICAL_DATA_BUCKET,
+            bucket_name,
             compute=False
         ).filter(lambda i: len(i) > 0)
 
