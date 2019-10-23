@@ -6,6 +6,9 @@ import os
 
 
 def find_duplicated_content_item_IDs(issue_json: dict) -> list:
+    """
+    Find duplicated content item IDs in the ToC of a newspaper issue.
+    """
     ci_ids = [ci['m']['id'] for ci in issue_json['i']]
     duplicates = []
     for ci_id, count in Counter(ci_ids).items():

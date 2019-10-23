@@ -60,15 +60,6 @@ def list_pages(bucket_name=S3_CANONICAL_DATA_BUCKET):
             f"{os.path.join(bucket_name, f'{np}/pages/*')}"
         )
     ).flatten().compute()
-    """
-    page_files = [
-        file
-        for np in newspapers
-        for file in fixed_s3fs_glob(
-            f"{os.path.join(bucket_name, f'{np}/pages/*')}"
-        )
-    ]
-    """
     print(f'{bucket_name} contains {len(page_files)} .bz2 files')
     return page_files
 
@@ -154,7 +145,9 @@ def fetch_issue_ids(
         return issue_id_bag
 
 
-# TODO: add  possibility to do it only for certain newspapers
+# TODO:
+# - add  possibility to do it only for certain newspapers
+# - finish implementation
 def fetch_page_ids(
     bucket_name=S3_CANONICAL_DATA_BUCKET,
     source="issues",

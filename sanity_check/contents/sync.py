@@ -1,9 +1,21 @@
+"""TODO
+
+Usage:
+    sync.py s3 --canonical-bucket=<cb> --rebuilt-bucket=<rb> --output-dir=<od> [--k8-memory=<mem> --k8-workers=<wkrs>]
+    sync.py db --canonical-bucket=<cb> --db-config=<db>
+
+Options:
+
+--canonical-bucket=<cb>  S3 bucket where canonical JSON data will be read from
+"""  # noqa: E501
+
 import pandas as pd
-from .s3_data import fetch_issue_ids, fetch_issue_ids_rebuilt
-from .mysql import list_issues as mysql_list_issues
+from docopt import docopt
+from sanity_check.contents.s3_data import fetch_issue_ids, fetch_issue_ids_rebuilt
+from sanity_check.contents.mysql import list_issues as mysql_list_issues
 
 
-def check_sync_db(s3_bucket_name: str, mysql_db_config: str) -> pd.DataFrame:
+def sync_db(s3_bucket_name: str, mysql_db_config: str) -> pd.DataFrame:
     """
     Check which canonical issues from S3 are not present in the DB.
 
@@ -61,7 +73,7 @@ def check_sync_db(s3_bucket_name: str, mysql_db_config: str) -> pd.DataFrame:
     return issues_to_ingest
 
 
-def check_sync_rebuilt(
+def sync_rebuilt(
     canonical_bucket_name: str,
     rebuilt_bucket_name: str
 ) -> tuple:
@@ -121,7 +133,7 @@ def configure_db_ingestion(s3_bucket_name: str, mysql_db_config: str) -> list:
     """Generate the config file for DB ingestion in a data-driven fashion."""
     config = []
 
-    issues_to_ingest = check_sync_db(s3_bucket_name, mysql_db_config)
+    issues_to_ingest = sync_db(s3_bucket_name, mysql_db_config)
 
     for key, group in issues_to_ingest.groupby(by='newspaper_id'):
         missing_years = sorted(set(group.year))
@@ -148,7 +160,7 @@ def configure_rebuild(
     config = []
 
     if issues_to_rebuild is None:
-        issues_to_ingest, issues_to_rebuild = check_sync_rebuilt(
+        issues_to_ingest, issues_to_rebuild = sync_rebuilt(
             canonical_bucket_name,
             rebuilt_bucket_name
         )
@@ -184,7 +196,7 @@ def configure_ingestion(
     config = []
 
     if issues_to_ingest is None:
-        issues_to_ingest, issues_to_rebuild = check_sync_rebuilt(
+        issues_to_ingest, issues_to_rebuild = sync_rebuilt(
             canonical_bucket_name,
             rebuilt_bucket_name
         )
@@ -205,6 +217,56 @@ def configure_ingestion(
     return config
 
 
-"""
-All this eventually should be called with a CLI.
-""" # noqa
+def run_s3_sync(
+    canonical_bucket_name: str,
+    rebuilt_bucket_name: str,
+    output_dir: str,
+    k8_memory: str,
+    k8_workers_n: int
+) -> None:
+    """Short summary.
+
+    :param str canonical_bucket_name: Name of S3 bucket with canonical data.
+    :param str rebuilt_bucket_name: Name of S3 bucket with rebuilt data.
+    :param str output_dir: Description of parameter `output_dir`.
+    :param str k8_memory: Memory to be given each worker in the dask kubernetes
+        cluster (e.g. "10G").
+    :param int k8_workers_n: Numnber of workers to create when initialising
+        the dask kubernetes cluster.
+    :return: None
+    :rtype: None
+
+    """
+    try:
+        pass
+    except Exception as e:
+        raise e
+    finally:
+        pass
+
+
+def main():
+    arguments = docopt(__doc__)
+    s3_sync = arguments['s3']
+    db_sync = arguments['db']
+    s3_canonical_bucket = arguments['--canonical-bucket']
+    s3_rebuilt_bucket = arguments['--rebuilt-bucket']
+    output_dir = arguments['--output-dir']
+    memory = arguments['--k8-memory'] if arguments['--k8-memory'] else "1G"
+    workers = arguments['--k8-workers'] if arguments['--k8-workers'] else 50
+
+    if s3_sync:
+        run_s3_sync(
+            canonical_bucket_name=s3_canonical_bucket,
+            rebuilt_bucket_name=s3_rebuilt_bucket,
+            output_dir=output_dir,
+            k8_memory=memory,
+            k8_workers_n=workers
+        )
+    elif db_sync:
+        # TODO: implement
+        pass
+
+
+if __name__ == '__main__':
+    main()

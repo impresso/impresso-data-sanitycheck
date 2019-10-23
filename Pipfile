@@ -9,10 +9,11 @@ humanize = "*"
 requests = "*"
 tqdm = "*"
 impresso-db = {editable = true,path = "./../impresso-master-db"}
-impresso-commons = {editable = true,path = "./../impresso-pycommons"}
 dkpro-pycas-0-1-1a = {editable = true,git = "https://github.com/dkpro/dkpro-pycas.git"}
 dask = {extras = ["complete"],version = "==2.5.2"}
 dask-k8 = {editable = true,git = "https://github.com/impresso/dask_k8.git"}
+impresso-commons = {editable = true,path = "./../impresso-pycommons"}
+sanity-check = {editable = true,path = "."}
 
 [dev-packages]
 jupyter = "*"
