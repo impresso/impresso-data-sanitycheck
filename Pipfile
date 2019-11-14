@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 docopt = "*"
 humanize = "*"
+aenum = "*"
 requests = "*"
 tqdm = "*"
 distributed = "==2.3.2"

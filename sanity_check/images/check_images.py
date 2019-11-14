@@ -33,10 +33,8 @@ import time
 import humanize
 import json
 
-
-
 from impresso_commons.images import img_utils
-import impresso_commons.path_fs as path
+import impresso_commons.path.path_fs as path
 import impresso_commons.utils as utils
 
 logger = logging.getLogger(__name__)
@@ -130,8 +128,10 @@ def init_logger(mylogger, log_level, log_file):
 
 def initialize_dict(enum_key, def_value):
     d = {}
-    for enum_name, enum_member in enum_key.__members__.items():
-        d.setdefault(enum_member.value, def_value)
+    #for enum_name, enum_member in enum_key.__members__.items():
+        #d.setdefault(enum_member.value, def_value)
+    for elem in enum_key:
+        d.setdefault(elem.value, def_value)
     return d
 
 
@@ -192,6 +192,7 @@ def check_canonical_issue(issue_pair):
 
     This information is added up at journal level by the L{run_check_canonical} function.
     """
+
     issue_dir_original = issue_pair[0]
     issue_dir_canonical = issue_pair[1]
 
@@ -314,6 +315,7 @@ def check_canonical_issue(issue_pair):
                 if len(info) != len(jp2):
                     local_cases_dict.setdefault(CanonicalImageCase.infofile_with_wrongnumber_img.value, []).append(
                         shortinfo)
+
         return local_cases_dict, local_stats_dict
 
 
@@ -475,36 +477,42 @@ def check_canonical_journal(original_issues, canonical_issues, parallel_executio
 
     # prepare the execution of the import function
     # tasks = [
-    #     delayed(check_canonical_issue)(orig, can)
-    #     for orig, can in pairs
+    #       delayed(check_canonical_issue)(pair)
+    #       for pair in pairs
     # ]
 
     print(f"\nChecking {len(pairs)} issues pairs...(parallelized={parallel_execution})")
     logger.info(f"\nChecking {len(pairs)} issues pairs...(parallelized={parallel_execution})")
 
     # execute tasks
-    # results = utils.executetask(tasks, parallel_execution)
+    #results = utils.executetask(tasks, parallel_execution)
 
     # with bags
     bag = db.from_sequence(pairs)
     bag_processed = bag.map(check_canonical_issue)
     with ProgressBar():
-        results = bag_processed.compute()
+        results = bag_processed.compute()  # ok when scheduler='single-threaded'
+
+    # classic
+    # results = []
+    # for p in pairs:
+    #     (local_cases_dict, local_stats_dict) = check_canonical_issue(p)
+    #     results.append((local_cases_dict, local_stats_dict))
 
 
     # add local (issue) results to global (journal) results
-    for cases, stats in results:
-        for name, member in CanonicalImageCase.__members__.items():
-            for c in cases:
-                if c == member.value:
-                    global_canonical_cases.setdefault(member.value, []).append(cases[c][0])
-                    break
-
-        for name, member in CanonicalImageStats.__members__.items():
-            for c in stats:
-                if c == member.value:
-                    global_image_counts[member.value] += stats[c]
-                    break
+    # for cases, stats in results:
+    #     for name, member in CanonicalImageCase.__members__.items():
+    #         for c in cases:
+    #             if c == member.value:
+    #                 global_canonical_cases.setdefault(member.value, []).append(cases[c][0])
+    #                 break
+    #
+    #     for name, member in CanonicalImageStats.__members__.items():
+    #         for c in stats:
+    #             if c == member.value:
+    #                 global_image_counts[member.value] += stats[c]
+    #                 break
     return global_canonical_cases, global_image_counts, global_journal_counts
 
 
@@ -772,7 +780,8 @@ def main(args):
     rep_dir = args["--report-dir"]
     log_file = args["--log-file"]
     command = args["--command"]
-    parallel_execution = args["--parallelize"]
+    #parallel_execution = args["--parallelize"]
+    parallel_execution = True
     log_level = logging.DEBUG if args["--verbose"] else logging.INFO
 
     # logger and some vars
