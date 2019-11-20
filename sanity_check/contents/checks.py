@@ -17,6 +17,7 @@ def find_duplicated_content_item_IDs(issue_json: dict) -> list:
     return duplicates
 
 
+# TODO: this is a local check, but we need to do also a global check
 def check_duplicated_content_item_IDs(issue_bag: bag) -> pd.DataFrame:
     duplicates_bag = issue_bag.map(
         find_duplicated_content_item_IDs

@@ -27,6 +27,10 @@ def list_newspapers(
         Bucket=bucket_name,
         PaginationConfig={'PageSize': 10000}
     )):
+        # means the bucket is empty
+        if 'Contents' not in resp:
+            continue
+
         for f in resp['Contents']:
             newspapers.add(f["Key"].split("/")[0])
     print(f'{bucket_name} contains {len(newspapers)} newspapers')
@@ -88,6 +92,10 @@ def fetch_issue_ids_rebuilt(bucket_name=S3_REBUILT_DATA_BUCKET, compute=True):
     to parse all content items IDs in rebuilt data and derive issue IDs.
     """
     rebuilt_files = list_files_rebuilt(bucket_name)
+
+    if not rebuilt_files:
+        return None
+
     ci_bag = db.read_text(
         rebuilt_files,
         storage_options=IMPRESSO_STORAGEOPT

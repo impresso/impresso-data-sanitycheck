@@ -43,5 +43,5 @@ def list_issues(db_config=None):
         db_id[0]
         for db_id in mysql_ids
     ]
-    print(f'Fetched {len(issue_ids)} content item IDs from DB')
+    print(f'Fetched {len(issue_ids)} issue IDs from DB')
     return issue_ids
