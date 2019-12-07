@@ -35,8 +35,6 @@ def sync_db(s3_bucket_name: str, mysql_db_config: str) -> pd.DataFrame:
     """
     Check which canonical issues from S3 are not present in the DB.
 
-    # TODO: serialise dataframe somewhere
-
     Return a dataframe with detailed information.
     """
 

@@ -19,9 +19,7 @@ def find_duplicated_content_item_IDs(issue_json: dict) -> list:
 
 # TODO: this is a local check, but we need to do also a global check
 def check_duplicated_content_item_IDs(issue_bag: bag) -> pd.DataFrame:
-    duplicates_bag = issue_bag.map(
-        find_duplicated_content_item_IDs
-    ).flatten()
+    duplicates_bag = issue_bag.map(find_duplicated_content_item_IDs).flatten()
 
     duplicates = duplicates_bag.map(
         lambda i: {
@@ -40,11 +38,13 @@ def check_duplicated_content_item_IDs(issue_bag: bag) -> pd.DataFrame:
             columns=['id', 'issue_id', 'newspaper_id', 'year']
         )
 
-    print((
-        f'Found {duplicates_df.shape[0]} duplicated '
-        'content item IDs, belonging to '
-        f'{duplicates_df.newspaper_id.unique().size} journals.'
-    ))
+    print(
+        (
+            f'Found {duplicates_df.shape[0]} duplicated '
+            'content item IDs, belonging to '
+            f'{duplicates_df.newspaper_id.unique().size} journals.'
+        )
+    )
     return duplicates_df
 
 
@@ -62,11 +62,8 @@ def check_duplicated_issues_IDs(issue_bag):
 
 
 # TODO: test
-def check_inconsistent_page_ids(
-    canonical_bucket_name: str
-) -> pd.DataFrame:
+def check_inconsistent_page_ids(canonical_bucket_name: str) -> pd.DataFrame:
     """Check whether there are mismatches between page IDs.
-
 
     Page IDs are found in two places in our data:
     1. field `pp` of issue JSON
@@ -77,25 +74,28 @@ def check_inconsistent_page_ids(
     """
 
     page_ids_from_issues = fetch_page_ids(
-        canonical_bucket_name,
-        source="issues"
+        canonical_bucket_name, source="issues"
     )
-    page_ids_from_pages = fetch_page_ids(
-        canonical_bucket_name,
-        source="pages"
+    page_ids_from_pages = fetch_page_ids(canonical_bucket_name, source="pages")
+
+    df_page_ids_from_issues = (
+        bag.from_sequence(set(page_ids_from_issues))
+        .map(lambda id: {"id": id, "from_issues": True})
+        .to_dataframe()
+        .set_index('id')
+        .persist()
     )
 
-    df_page_ids_from_issues = bag.from_sequence(set(page_ids_from_issues)).map(
-        lambda id: {"id": id, "from_issues": True}
-    ).to_dataframe().set_index('id').persist()
-
-    df_page_ids_from_pages = bag.from_sequence(page_ids_from_pages).map(
-        lambda id: {"id": id, "from_pages": True}
-    ).to_dataframe().set_index('id').persist()
+    df_page_ids_from_pages = (
+        bag.from_sequence(page_ids_from_pages)
+        .map(lambda id: {"id": id, "from_pages": True})
+        .to_dataframe()
+        .set_index('id')
+        .persist()
+    )
 
     df_pages = df_page_ids_from_issues.join(
-        df_page_ids_from_pages,
-        how='outer'
+        df_page_ids_from_pages, how='outer'
     ).compute()
 
     df_pages['newspaper_id'] = df_pages.index.map(lambda z: z.split('-')[0])
@@ -104,8 +104,7 @@ def check_inconsistent_page_ids(
 
 def run_checks_canonical(canonical_bucket_name, output_dir=None):
     canonical_issues_bag = fetch_issues(
-        canonical_bucket_name,
-        compute=False
+        canonical_bucket_name, compute=False
     ).filter(lambda i: len(i) > 0)
 
     # 1) verify that there are not duplicated content item IDs
