@@ -1,4 +1,4 @@
-"""Command-line script to generated configuration files for ingestion/rebuild scripts.
+"""Command-line script to generate configuration files for ingestion/rebuild scripts.
 
 Usage:
     sync.py s3 --canonical-bucket=<cb> --rebuilt-bucket=<rb> --output-dir=<od> [--k8-memory=<mem> --k8-workers=<wkrs>]
@@ -45,27 +45,19 @@ def sync_db(s3_bucket_name: str, mysql_db_config: str) -> pd.DataFrame:
     mysql_issue_ids = mysql_list_issues(mysql_db_config)
 
     # create dataframe with issue ids from s3
-    s3_issue_data = pd.DataFrame(
-        [{"id": issue_id, "in_s3": True} for issue_id in s3_issues_ids]
-    ).set_index('id')
+    s3_issue_data = pd.DataFrame([{"id": issue_id, "in_s3": True} for issue_id in s3_issues_ids]).set_index('id')
     # create dataframe with issue ids from MySQL
-    mysql_issue_data = pd.DataFrame(
-        [{"id": issue_id, "in_mysql": True} for issue_id in mysql_issue_ids]
-    ).set_index('id')
+    mysql_issue_data = pd.DataFrame([{"id": issue_id, "in_mysql": True} for issue_id in mysql_issue_ids]).set_index(
+        'id'
+    )
 
     # we combine the two sets of IDs with an outer join
     issue_data = mysql_issue_data.join(s3_issue_data, how='outer')
 
     # and return only those that are in S3 but not in MySQL
-    issues_to_ingest = issue_data[
-        (issue_data.in_mysql.isnull()) & issue_data.in_s3.notnull()
-    ]
-    issues_to_ingest['newspaper_id'] = issues_to_ingest.index.map(
-        lambda i: i.split('-')[0]
-    )
-    issues_to_ingest['year'] = issues_to_ingest.index.map(
-        lambda i: int(i.split('-')[1])
-    )
+    issues_to_ingest = issue_data[(issue_data.in_mysql.isnull()) & issue_data.in_s3.notnull()]
+    issues_to_ingest['newspaper_id'] = issues_to_ingest.index.map(lambda i: i.split('-')[0])
+    issues_to_ingest['year'] = issues_to_ingest.index.map(lambda i: int(i.split('-')[1]))
 
     print(
         (
@@ -88,25 +80,17 @@ def sync_rebuilt(canonical_bucket_name: str, rebuilt_bucket_name: str) -> tuple:
     """
 
     s3_canonical_issues = fetch_issue_ids(canonical_bucket_name, compute=False)
-    s3_rebuilt_issues = fetch_issue_ids_rebuilt(
-        rebuilt_bucket_name, compute=False
-    )
+    s3_rebuilt_issues = fetch_issue_ids_rebuilt(rebuilt_bucket_name, compute=False)
 
     # the s3 rebuilt bucket is not empty
     if s3_rebuilt_issues:
 
         s3_rebuilt_data = (
-            s3_rebuilt_issues.map(lambda i: {'id': i, "in_rebuilt": True})
-            .to_dataframe()
-            .set_index('id')
-            .compute()
+            s3_rebuilt_issues.map(lambda i: {'id': i, "in_rebuilt": True}).to_dataframe().set_index('id').compute()
         )
 
         s3_canonical_data = (
-            s3_canonical_issues.map(lambda i: {'id': i, "in_canonical": True})
-            .to_dataframe()
-            .set_index('id')
-            .compute()
+            s3_canonical_issues.map(lambda i: {'id': i, "in_canonical": True}).to_dataframe().set_index('id').compute()
         )
 
         print('Joining the two dataframes')
@@ -115,9 +99,7 @@ def sync_rebuilt(canonical_bucket_name: str, rebuilt_bucket_name: str) -> tuple:
     # the s3 rebuilt bucket is empty!
     else:
         issue_data = (
-            s3_canonical_issues.map(
-                lambda i: {'id': i, "in_canonical": True, "in_rebuilt": None}
-            )
+            s3_canonical_issues.map(lambda i: {'id': i, "in_canonical": True, "in_rebuilt": None})
             .to_dataframe()
             .set_index('id')
             .compute()
@@ -126,19 +108,13 @@ def sync_rebuilt(canonical_bucket_name: str, rebuilt_bucket_name: str) -> tuple:
     issue_data['newspaper_id'] = issue_data.index.map(lambda i: i.split('-')[0])
     issue_data['year'] = issue_data.index.map(lambda i: int(i.split('-')[1]))
 
-    issues_to_rebuild = issue_data[
-        (issue_data.in_canonical.notnull()) & (issue_data.in_rebuilt.isnull())
-    ]
-    issues_to_ingest = issue_data[
-        (issue_data.in_canonical.isnull()) & (issue_data.in_rebuilt.notnull())
-    ]
+    issues_to_rebuild = issue_data[(issue_data.in_canonical.notnull()) & (issue_data.in_rebuilt.isnull())]
+    issues_to_ingest = issue_data[(issue_data.in_canonical.isnull()) & (issue_data.in_rebuilt.notnull())]
 
     return (issues_to_ingest, issues_to_rebuild)
 
 
-def configure_db_ingestion(
-    s3_bucket_name: str, mysql_db_config: str, issues_to_ingest: pd.DataFrame
-) -> list:
+def configure_db_ingestion(s3_bucket_name: str, mysql_db_config: str, issues_to_ingest: pd.DataFrame) -> list:
     """Generate the config file for DB ingestion in a data-driven fashion."""
     config = []
 
@@ -152,9 +128,7 @@ def configure_db_ingestion(
 
 
 def configure_rebuild(
-    canonical_bucket_name: str,
-    rebuilt_bucket_name: str,
-    issues_to_rebuild: pd.DataFrame = None,
+    canonical_bucket_name: str, rebuilt_bucket_name: str, issues_to_rebuild: pd.DataFrame = None,
 ) -> list:
     """Generate the config file for data rebuild in a data-driven fashion.
 
@@ -165,9 +139,7 @@ def configure_rebuild(
     config = []
 
     if issues_to_rebuild is None:
-        issues_to_ingest, issues_to_rebuild = sync_rebuilt(
-            canonical_bucket_name, rebuilt_bucket_name
-        )
+        issues_to_ingest, issues_to_rebuild = sync_rebuilt(canonical_bucket_name, rebuilt_bucket_name)
 
     print(
         (
@@ -184,9 +156,7 @@ def configure_rebuild(
 
 
 def configure_ingestion(
-    canonical_bucket_name: str,
-    rebuilt_bucket_name: str,
-    issues_to_ingest: pd.DataFrame = None,
+    canonical_bucket_name: str, rebuilt_bucket_name: str, issues_to_ingest: pd.DataFrame = None,
 ) -> list:
     """Generate the config file for data rebuild in a data-driven fashion.
 
@@ -197,9 +167,7 @@ def configure_ingestion(
     config = []
 
     if issues_to_ingest is None:
-        issues_to_ingest, issues_to_rebuild = sync_rebuilt(
-            canonical_bucket_name, rebuilt_bucket_name
-        )
+        issues_to_ingest, issues_to_rebuild = sync_rebuilt(canonical_bucket_name, rebuilt_bucket_name)
 
     print(
         (
@@ -215,9 +183,7 @@ def configure_ingestion(
     return config
 
 
-def run_s3_sync(
-    canonical_bucket_name: str, rebuilt_bucket_name: str, output_dir: str
-) -> None:
+def run_s3_sync(canonical_bucket_name: str, rebuilt_bucket_name: str, output_dir: str) -> None:
     """Short summary.
 
     :param str canonical_bucket_name: Name of S3 bucket with canonical data.
@@ -233,28 +199,18 @@ def run_s3_sync(
     """
     try:
 
-        issues_to_ingest, issues_to_rebuild = sync_rebuilt(
-            canonical_bucket_name, rebuilt_bucket_name
-        )
+        issues_to_ingest, issues_to_rebuild = sync_rebuilt(canonical_bucket_name, rebuilt_bucket_name)
 
         # serialize dataframes for later
-        issues_to_ingest.to_pickle(
-            os.path.join(output_dir, 'issues_to_ingest.pkl')
-        )
-        issues_to_rebuild.to_pickle(
-            os.path.join(output_dir, 'issues_to_rebuild.pkl')
-        )
+        issues_to_ingest.to_pickle(os.path.join(output_dir, 'issues_to_ingest.pkl'))
+        issues_to_rebuild.to_pickle(os.path.join(output_dir, 'issues_to_rebuild.pkl'))
 
         ingestion_config = configure_ingestion(
-            canonical_bucket_name,
-            rebuilt_bucket_name,
-            issues_to_ingest=issues_to_ingest,
+            canonical_bucket_name, rebuilt_bucket_name, issues_to_ingest=issues_to_ingest,
         )
 
         rebuild_config = configure_rebuild(
-            canonical_bucket_name,
-            rebuilt_bucket_name,
-            issues_to_rebuild=issues_to_rebuild,
+            canonical_bucket_name, rebuilt_bucket_name, issues_to_rebuild=issues_to_rebuild,
         )
 
         # write the generated configurations to a file
@@ -270,19 +226,13 @@ def run_s3_sync(
         raise e
 
 
-def run_db_sync(
-    canonical_bucket_name: str, db_config: str, output_dir: str
-) -> None:
+def run_db_sync(canonical_bucket_name: str, db_config: str, output_dir: str) -> None:
 
     issues_to_ingest = sync_db(canonical_bucket_name, db_config)
 
-    issues_to_ingest.to_pickle(
-        os.path.join(output_dir, 'issues_to_ingest_db.pkl')
-    )
+    issues_to_ingest.to_pickle(os.path.join(output_dir, 'issues_to_ingest_db.pkl'))
 
-    dbingestion_config = configure_db_ingestion(
-        canonical_bucket_name, db_config, issues_to_ingest
-    )
+    dbingestion_config = configure_db_ingestion(canonical_bucket_name, db_config, issues_to_ingest)
 
     # write the generated configurations to a file
     dbingestion_cfg_path = os.path.join(output_dir, 'dbingest-config.json')
@@ -299,9 +249,7 @@ def main():
     output_dir = arguments['--output-dir']
     db_config = arguments['--db-config']
     memory = arguments['--k8-memory'] if arguments['--k8-memory'] else "1G"
-    workers = (
-        int(arguments['--k8-workers']) if arguments['--k8-workers'] else 50
-    )
+    workers = int(arguments['--k8-workers']) if arguments['--k8-workers'] else 50
 
     image_uri = "ic-registry.epfl.ch/dhlab/impresso_data-sanity-check:v1"
 
@@ -311,9 +259,7 @@ def main():
             namespace="dhlab",
             cluster_id="impresso-sanitycheck-cli",
             scheduler_pod_spec=make_scheduler_configuration(),
-            worker_pod_spec=make_worker_configuration(
-                docker_image=image_uri, memory=memory
-            ),
+            worker_pod_spec=make_worker_configuration(docker_image=image_uri, memory=memory),
         )
         cluster.create()
         cluster.scale(workers, blocking=True)
@@ -323,15 +269,11 @@ def main():
 
         if s3_sync:
             run_s3_sync(
-                canonical_bucket_name=s3_canonical_bucket,
-                rebuilt_bucket_name=s3_rebuilt_bucket,
-                output_dir=output_dir,
+                canonical_bucket_name=s3_canonical_bucket, rebuilt_bucket_name=s3_rebuilt_bucket, output_dir=output_dir,
             )
         elif db_sync:
             run_db_sync(
-                canonical_bucket_name=s3_canonical_bucket,
-                db_config=db_config,
-                output_dir=output_dir,
+                canonical_bucket_name=s3_canonical_bucket, db_config=db_config, output_dir=output_dir,
             )
 
     except Exception as e:
