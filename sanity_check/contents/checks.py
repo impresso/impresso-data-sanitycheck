@@ -21,7 +21,7 @@ from impresso_commons.utils.kube import (
     make_scheduler_configuration,
     make_worker_configuration,
 )
-from s3_data import fetch_issues, fetch_page_ids, fetch_issue_ids
+from .s3_data import fetch_issues, fetch_page_ids, fetch_issue_ids
 import pandas as pd
 from dask import bag
 import os
