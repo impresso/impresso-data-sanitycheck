@@ -259,7 +259,7 @@ def serialize_markdown_table(corpus_stats_df: pd.DataFrame, output_dir: str) -> 
 
     markdown_data = tabulate.tabulate(corpus_stats_df, tablefmt='pipe', headers=hs)
 
-    with open(os.path.join(output_dir, 'corpus_stats_table.md'), 'w', 'utf-8') as outfile:
+    with open(os.path.join(output_dir, 'corpus_stats_table.md'), mode='w', encoding='utf-8') as outfile:
         outfile.write(markdown_data)
 
 

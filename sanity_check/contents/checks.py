@@ -1,5 +1,27 @@
+"""Command-line script to perform sanity checks on canonical/rebuilt data in s3.
+
+Usage:
+    checks.py --canonical-bucket=<cb> --rebuilt-bucket=<rb> --output-dir=<od> [--k8-memory=<mem> --k8-workers=<wkrs>]
+
+Options:
+
+--canonical-bucket=<cb>  S3 bucket where canonical JSON data will be read from
+
+Example:
+
+    python sanity_check/contents/sync.py s3 --canonical-bucket='s3://original-canonical-staging' \
+    --rebuilt-bucket='s3://passim-rebuilt' --output-dir=./ --k8-memory="1G" --k8-workers=25
+"""  # noqa: E501
+
 from collections import Counter
-from .s3_data import fetch_issues, fetch_page_ids, fetch_issue_ids
+from dask_k8 import DaskCluster
+from docopt import docopt
+
+from impresso_commons.utils.kube import (
+    make_scheduler_configuration,
+    make_worker_configuration,
+)
+from s3_data import fetch_issues, fetch_page_ids, fetch_issue_ids
 import pandas as pd
 from dask import bag
 import os
@@ -34,9 +56,7 @@ def check_duplicated_content_item_IDs(issue_bag: bag) -> pd.DataFrame:
         duplicates_df = pd.DataFrame(duplicates).set_index('id')
     else:
         # there are no duplicates
-        duplicates_df = pd.DataFrame(
-            columns=['id', 'issue_id', 'newspaper_id', 'year']
-        )
+        duplicates_df = pd.DataFrame(columns=['id', 'issue_id', 'newspaper_id', 'year'])
 
     print(
         (
@@ -73,9 +93,7 @@ def check_inconsistent_page_ids(canonical_bucket_name: str) -> pd.DataFrame:
     we need to verify that all page IDs in #1 are contained within #2.
     """
 
-    page_ids_from_issues = fetch_page_ids(
-        canonical_bucket_name, source="issues"
-    )
+    page_ids_from_issues = fetch_page_ids(canonical_bucket_name, source="issues")
     page_ids_from_pages = fetch_page_ids(canonical_bucket_name, source="pages")
 
     df_page_ids_from_issues = (
@@ -94,18 +112,14 @@ def check_inconsistent_page_ids(canonical_bucket_name: str) -> pd.DataFrame:
         .persist()
     )
 
-    df_pages = df_page_ids_from_issues.join(
-        df_page_ids_from_pages, how='outer'
-    ).compute()
+    df_pages = df_page_ids_from_issues.join(df_page_ids_from_pages, how='outer').compute()
 
     df_pages['newspaper_id'] = df_pages.index.map(lambda z: z.split('-')[0])
     return df_pages[~(df_pages.from_pages == df_pages.from_issues)]
 
 
 def run_checks_canonical(canonical_bucket_name, output_dir=None):
-    canonical_issues_bag = fetch_issues(
-        canonical_bucket_name, compute=False
-    ).filter(lambda i: len(i) > 0)
+    canonical_issues_bag = fetch_issues(canonical_bucket_name, compute=False).filter(lambda i: len(i) > 0)
 
     # 1) verify that there are not duplicated content item IDs
     duplicates_df = check_duplicated_content_item_IDs(canonical_issues_bag)
@@ -116,7 +130,50 @@ def run_checks_canonical(canonical_bucket_name, output_dir=None):
         duplicates_df.to_csv(os.path.join(output_dir, f"{fname}.csv"))
 
     # 2) verify the consistency of page IDs
-    pages_df = check_inconsistent_page_ids(canonical_issues_bag)
+    pages_df = check_inconsistent_page_ids(canonical_bucket_name)
     print(pages_df.head())
 
-    return duplicates_df
+    if output_dir and os.path.exists(output_dir):
+        fname = "inconsistent_page_ids"
+        duplicates_df.to_pickle(os.path.join(output_dir, f"{fname}.pkl"))
+        duplicates_df.to_csv(os.path.join(output_dir, f"{fname}.csv"))
+
+    return duplicates_df, pages_df
+
+
+def main():
+    arguments = docopt(__doc__)
+    s3_canonical_bucket = arguments['--canonical-bucket']
+    s3_rebuilt_bucket = arguments['--rebuilt-bucket']
+    output_dir = arguments['--output-dir']
+    memory = arguments['--k8-memory'] if arguments['--k8-memory'] else "1G"
+    workers = int(arguments['--k8-workers']) if arguments['--k8-workers'] else 50
+
+    image_uri = "ic-registry.epfl.ch/dhlab/impresso_data-sanity-check:v1"
+
+    try:
+        # first thing to do is to create the dask kubernetes cluster
+        cluster = DaskCluster(
+            namespace="dhlab",
+            cluster_id="impresso-sanitycheck-cli",
+            scheduler_pod_spec=make_scheduler_configuration(),
+            worker_pod_spec=make_worker_configuration(docker_image=image_uri, memory=memory),
+        )
+        cluster.create()
+        cluster.scale(workers, blocking=True)
+        dask_client = cluster.make_dask_client()
+        dask_client.get_versions(check=True)
+        print(dask_client)
+        run_checks_canonical(s3_canonical_bucket, output_dir)
+
+        # TODO: do stuff
+
+    except Exception as e:
+        raise e
+    finally:
+        if cluster:
+            cluster.close()
+
+
+if __name__ == '__main__':
+    main()
