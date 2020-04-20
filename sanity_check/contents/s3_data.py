@@ -168,8 +168,11 @@ def fetch_issue_ids(bucket_name=S3_CANONICAL_DATA_BUCKET, compute=True, issue_ba
 # - add  possibility to do it only for certain newspapers
 # - finish implementation
 def fetch_page_ids(
-    bucket_name=S3_CANONICAL_DATA_BUCKET, source="issues", issue_bag=None
-):
+    bucket_name: str = S3_CANONICAL_DATA_BUCKET,
+    source: str = "issues",
+    issue_bag: db.Bag = None,
+    n_partitions: int = 100,
+) -> db.Bag:
 
     valid_sources = ["issues", "pages"]
     assert source in valid_sources
@@ -180,25 +183,20 @@ def fetch_page_ids(
         )
 
     if source == "issues":
-
         print(f"Fetching page IDs from {source}")
-
         # no need to recompute the issues
         if issue_bag:
             pass
         else:
             issue_bag = fetch_issues(compute=False)
-        return issue_bag.map(lambda i: i["pp"]).flatten().compute()
+        return issue_bag.map(lambda i: i["pp"]).flatten()
     else:
         page_files_bag = list_pages(bucket_name)
-        page_ids = (
-            db.from_sequence(page_files_bag)
-            .repartition(6000)
+        return (
+            db.from_sequence(page_files, n_partitions=n_partitions)
             .map(alternative_read_text, IMPRESSO_STORAGEOPT)
             .flatten()
             .map(json.loads)
             .filter(lambda i: len(i) > 0)
             .pluck("id")
-            .compute()
         )
-        return page_ids

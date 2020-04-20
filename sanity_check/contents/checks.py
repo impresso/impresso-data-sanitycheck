@@ -16,6 +16,7 @@ Example:
 from collections import Counter
 from dask_k8 import DaskCluster
 from docopt import docopt
+from typing import Dict
 
 from impresso_commons.utils.kube import (
     make_scheduler_configuration,
@@ -27,61 +28,65 @@ from dask import bag
 import os
 
 
-def find_duplicated_content_item_IDs(issue_json: dict) -> list:
+def check_duplicated_content_item_IDs(issue_bag: bag.Bag) -> pd.DataFrame:
+    """Short summary.
+
+    ..note::
+        This is a global check.
+
+    :param bag.Bag issue_bag: Description of parameter `issue_bag`.
+    :return: Description of returned object.
+    :rtype: pd.DataFrame
+
     """
-    Find duplicated content item IDs in the ToC of a newspaper issue.
-    """
-    ci_ids = [ci['m']['id'] for ci in issue_json['i']]
-    duplicates = []
-    for ci_id, count in Counter(ci_ids).items():
-        if count > 1:
-            duplicates.append(ci_id)
-    return duplicates
-
-
-# TODO: this is a local check, but we need to do also a global check
-def check_duplicated_content_item_IDs(issue_bag: bag) -> pd.DataFrame:
-    duplicates_bag = issue_bag.map(find_duplicated_content_item_IDs).flatten()
-
-    duplicates = duplicates_bag.map(
-        lambda i: {
-            "id": i,
-            "issue_id": "-".join(i.split('-')[:-1]),
-            "newspaper_id": i.split('-')[0],
-            "year": int(i.split('-')[1]),
-        }
-    ).compute()
+    duplicates = (
+        issue_bag.map(lambda issue_json: [ci["m"]["id"] for ci in issue_json["i"]])
+        .flatten()
+        .frequencies()
+        .filter(lambda i: i[1] > 1)
+        .map(
+            lambda i: {"ci_id": i[0], "freq": i[1], "newspaper_id": i[0].split("-")[0]}
+        )
+        .compute()
+    )
 
     if duplicates:
-        duplicates_df = pd.DataFrame(duplicates).set_index('id')
+        duplicates_df = pd.DataFrame(duplicates).set_index("ci_id")
     else:
         # there are no duplicates
-        duplicates_df = pd.DataFrame(columns=['id', 'issue_id', 'newspaper_id', 'year'])
+        duplicates_df = pd.DataFrame(columns=["ci_id", "freq", "newspaper_id"])
 
     print(
         (
-            f'Found {duplicates_df.shape[0]} duplicated '
-            'content item IDs, belonging to '
-            f'{duplicates_df.newspaper_id.unique().size} journals.'
+            f"Found {duplicates_df.shape[0]} duplicated "
+            "content item IDs, belonging to "
+            f"{duplicates_df.newspaper_id.unique().size} journals"
+            f"({', '.join(list(duplicates_df.newspaper_id.unique()))})"
         )
     )
     return duplicates_df
 
 
-def check_duplicated_issues_IDs(issue_bag):
+def check_duplicated_issues_IDs(issue_bag: bag.Bag) -> pd.DataFrame:
     """Check that newspaper issue IDs are unique within the corpus."""
-    issue_ids = fetch_issue_ids(issue_bag=issue_bag)
-    print(f'{len(issue_ids)} issue IDs were fetched')
 
-    duplicate_issue_ids = []
-    for issue_id, count in Counter(issue_ids).items():
-        if count > 1:
-            duplicate_issue_ids.append(issue_id)
-    print(f'{len(duplicate_issue_ids)} duplicated IDs were found')
-    return duplicate_issue_ids
+    duplicate_issue_ids = (
+        issue_bag.pluck("id")
+        .frequencies()
+        .filter(lambda i: i[1] > 1)
+        .map(
+            lambda i: {
+                "issue_id": i[0],
+                "freq": i[1],
+                "newspaper_id": i[0].split("-")[0],
+            }
+        )
+        .compute()
+    )
+    print(f"{len(duplicate_issue_ids)} duplicated IDs were found")
+    return pd.DataFrame(duplicate_issue_ids).set_index("issue_id")
 
 
-# TODO: test
 def check_inconsistent_page_ids(canonical_bucket_name: str) -> pd.DataFrame:
     """Check whether there are mismatches between page IDs.
 
@@ -97,57 +102,65 @@ def check_inconsistent_page_ids(canonical_bucket_name: str) -> pd.DataFrame:
     page_ids_from_pages = fetch_page_ids(canonical_bucket_name, source="pages")
 
     df_page_ids_from_issues = (
-        bag.from_sequence(set(page_ids_from_issues))
-        .map(lambda id: {"id": id, "from_issues": True})
+        page_ids_from_issues.map(lambda id: {"id": id, "from_issues": True})
         .to_dataframe()
-        .set_index('id')
+        .set_index("id")
         .persist()
     )
 
     df_page_ids_from_pages = (
-        bag.from_sequence(page_ids_from_pages)
-        .map(lambda id: {"id": id, "from_pages": True})
+        page_ids_from_pages.map(lambda id: {"id": id, "from_pages": True})
         .to_dataframe()
-        .set_index('id')
+        .set_index("id")
         .persist()
     )
 
-    df_pages = df_page_ids_from_issues.join(df_page_ids_from_pages, how='outer').compute()
+    df_pages = df_page_ids_from_issues.join(
+        df_page_ids_from_pages, how="outer"
+    ).compute()
 
-    df_pages['newspaper_id'] = df_pages.index.map(lambda z: z.split('-')[0])
+    df_pages["newspaper_id"] = df_pages.index.map(lambda z: z.split("-")[0])
     return df_pages[~(df_pages.from_pages == df_pages.from_issues)]
 
 
 def run_checks_canonical(canonical_bucket_name, output_dir=None):
-    canonical_issues_bag = fetch_issues(canonical_bucket_name, compute=False).filter(lambda i: len(i) > 0)
+    canonical_issues_bag = fetch_issues(canonical_bucket_name, compute=False).filter(
+        lambda i: len(i) > 0
+    )
 
-    # 1) verify that there are not duplicated content item IDs
+    # 1) verify that there are not duplicated issue IDs
+    duplicated_issues_df = check_duplicated_issues_IDs(canonical_issues_bag)
+    if output_dir and os.path.exists(output_dir):
+        fname = "duplicate_issue_ids"
+        duplicated_issues_df.to_pickle(os.path.join(output_dir, f"{fname}.pkl"))
+        duplicated_issues_df.to_csv(os.path.join(output_dir, f"{fname}.csv"))
+
+    # 2) verify that there are not duplicated content item IDs
     duplicates_df = check_duplicated_content_item_IDs(canonical_issues_bag)
-
     if output_dir and os.path.exists(output_dir):
         fname = "duplicate_ci_ids"
         duplicates_df.to_pickle(os.path.join(output_dir, f"{fname}.pkl"))
         duplicates_df.to_csv(os.path.join(output_dir, f"{fname}.csv"))
 
-    # 2) verify the consistency of page IDs
-    pages_df = check_inconsistent_page_ids(canonical_bucket_name)
-    print(pages_df.head())
-
+    # 3) verify the consistency of page IDs
+    inconsistencies_df = check_inconsistent_page_ids(canonical_bucket_name)
     if output_dir and os.path.exists(output_dir):
         fname = "inconsistent_page_ids"
-        duplicates_df.to_pickle(os.path.join(output_dir, f"{fname}.pkl"))
-        duplicates_df.to_csv(os.path.join(output_dir, f"{fname}.csv"))
+        inconsistencies_df.to_pickle(os.path.join(output_dir, f"{fname}.pkl"))
+        inconsistencies_df.to_csv(os.path.join(output_dir, f"{fname}.csv"))
 
-    return duplicates_df, pages_df
+    # TODO: at this point output a list of newspaper that can be moved
+    # to staging
+    return
 
 
 def main():
     arguments = docopt(__doc__)
-    s3_canonical_bucket = arguments['--canonical-bucket']
-    s3_rebuilt_bucket = arguments['--rebuilt-bucket']
-    output_dir = arguments['--output-dir']
-    memory = arguments['--k8-memory'] if arguments['--k8-memory'] else "1G"
-    workers = int(arguments['--k8-workers']) if arguments['--k8-workers'] else 50
+    s3_canonical_bucket = arguments["--canonical-bucket"]
+    s3_rebuilt_bucket = arguments["--rebuilt-bucket"]
+    output_dir = arguments["--output-dir"]
+    memory = arguments["--k8-memory"] if arguments["--k8-memory"] else "1G"
+    workers = int(arguments["--k8-workers"]) if arguments["--k8-workers"] else 50
 
     image_uri = "ic-registry.epfl.ch/dhlab/impresso_data-sanity-check:v1"
 
@@ -157,7 +170,9 @@ def main():
             namespace="dhlab",
             cluster_id="impresso-sanitycheck-cli",
             scheduler_pod_spec=make_scheduler_configuration(),
-            worker_pod_spec=make_worker_configuration(docker_image=image_uri, memory=memory),
+            worker_pod_spec=make_worker_configuration(
+                docker_image=image_uri, memory=memory
+            ),
         )
         cluster.create()
         cluster.scale(workers, blocking=True)
@@ -175,5 +190,5 @@ def main():
             cluster.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
