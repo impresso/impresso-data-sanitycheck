@@ -191,9 +191,9 @@ def fetch_page_ids(
             issue_bag = fetch_issues(compute=False)
         return issue_bag.map(lambda i: i["pp"]).flatten()
     else:
-        page_files_bag = list_pages(bucket_name)
+        page_files = list_pages(bucket_name)
         return (
-            db.from_sequence(page_files, n_partitions=n_partitions)
+            db.from_sequence(page_files, npartitions=n_partitions)
             .map(alternative_read_text, IMPRESSO_STORAGEOPT)
             .flatten()
             .map(json.loads)

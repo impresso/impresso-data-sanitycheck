@@ -252,7 +252,6 @@ def main():
     workers = int(arguments['--k8-workers']) if arguments['--k8-workers'] else 50
 
     image_uri = "ic-registry.epfl.ch/dhlab/impresso_data-sanity-check:v1"
-
     try:
         # first thing to do is to create the dask kubernetes cluster
         cluster = DaskCluster(
@@ -261,6 +260,7 @@ def main():
             scheduler_pod_spec=make_scheduler_configuration(),
             worker_pod_spec=make_worker_configuration(docker_image=image_uri, memory=memory),
         )
+        #import pdb; pdb.set_trace()
         cluster.create()
         cluster.scale(workers, blocking=True)
         dask_client = cluster.make_dask_client()
