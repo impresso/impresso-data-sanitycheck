@@ -1,7 +1,7 @@
 """Command-line script to generate stats about impresso corpus/data.
 
 Usage:
-    stats.py s3 --input-bucket=<ib> --output-dir=<od> [--output-bucket=<ob> --k8-memory=<mem> --k8-workers=<wkrs> --flat]
+    stats.py s3 --input-bucket=<ib> --output-dir=<od> [--id-field=<id> --k8-memory=<mem> --k8-workers=<wkrs>]
     stats.py mysql --db-config=<dbcfg> --output-dir=<od>
     stats.py corpus --canonical-bucket=<cb> --rebuilt-bucket=<rb> --db-config=<db> --output-dir=<od> --output-bucket=<ob> [--k8-memory=<mem> --k8-workers=<wkrs>]
 
@@ -16,7 +16,8 @@ Example:
 
 import os
 import json
-import ipdb  # TODO remove later on
+
+# import ipdb  # TODO remove later on
 import pandas as pd
 from dask_k8 import DaskCluster
 from dask import bag as db
@@ -242,6 +243,66 @@ def compute_corpus_stats(s3_canonical_bucket: str, s3_rebuilt_bucket: str, db_co
     corpus_stats_df.to_csv(os.path.join(output_dir, 'newspaper_stats.csv'))
 
 
+def compute_content_items_stats(s3_input_bucket: str, output_dir: str, id_field: str = 'id') -> None:
+    """Computes the number of content items per newspaper per year in a given s3 bucket.
+
+    This function can be used on any s3 bucket containing ``.bz2``-compressed JSON-line files, provided that
+    JSON documents in these files contain an ``id`` field corresponding to the impresso canonical content item ID.
+
+    :param str s3_input_bucket: Name of input s3 bucket (starting with ``s3://``)
+    :param str output_dir: Path of output directory.
+    :return: Description of returned object.
+    :rtype: None
+
+    """
+    csv_output_file = os.path.join(output_dir, "ci_stats.csv")
+    pickle_output_file = os.path.join(output_dir, "ci_stats.pkl")
+    input_files = fixed_s3fs_glob(os.path.join(s3_input_bucket, '*bz2'))
+    print(f'Found {len(input_files)} input files in {s3_input_bucket}')
+
+    print('Computing statistics...')
+    contentitems_df = (
+        db.from_sequence(input_files, partition_size=2)
+        .map(alternative_read_text, IMPRESSO_STORAGEOPT)
+        .flatten()
+        .map(json.loads)
+        .map(
+            lambda i: {
+                "id": i[id_field],
+                "year": int(i[id_field].split("-")[1]),
+                "newspaper": i[id_field].split("-")[0],
+            }
+        )
+        .to_dataframe(
+            meta={
+                "id": str,
+                "year": int,
+                "newspaper": str,
+            }
+        )
+        .set_index("id")
+        .persist()
+    )
+
+    # group content item count by newspaper and year
+    ci_grouped = contentitems_df.groupby(by=["newspaper", "year"]).size().compute()
+    print('Done with computing statistics!')
+
+    df = pd.DataFrame(ci_grouped)
+    df.reset_index(inplace=True)
+    df["id"] = df.apply(lambda x: f"{x.newspaper}-{x.year}", axis=1)
+    df.set_index("id", inplace=True)
+    df.columns = ["newspaper", "year", "count"]
+    df["input_bucket"] = s3_input_bucket
+
+    # write outputs
+    df[["count", "input_bucket"]].to_csv(csv_output_file)
+    df.to_pickle(pickle_output_file)
+    print(f'CSV output written to {csv_output_file}')
+    print(f'Pickle output written to {pickle_output_file}')
+    return df
+
+
 def serialize_markdown_table(corpus_stats_df: pd.DataFrame, output_dir: str) -> None:
     hs = [
         'newspaper id',
@@ -274,6 +335,7 @@ def main():
     s3_output_bucket = arguments['--output-bucket']
     output_dir = arguments['--output-dir']
     db_config = arguments['--db-config']
+    id_field = arguments['--id-field']
     memory = arguments['--k8-memory'] if arguments['--k8-memory'] else "1G"
     workers = int(arguments['--k8-workers']) if arguments['--k8-workers'] else 50
 
@@ -293,10 +355,13 @@ def main():
         dask_client.get_versions(check=True)
         print(dask_client)
 
-        if s3_stats:
+        if db_stats:
             print("Not implemented yet!")
-        elif db_stats:
-            print("Not implemented yet!")
+        elif s3_stats:
+            if id_field:
+                compute_content_items_stats(s3_input_bucket, output_dir, id_field)
+            else:
+                compute_content_items_stats(s3_input_bucket, output_dir)
         elif corpus_stats:
             compute_corpus_stats(s3_canonical_bucket, s3_rebuilt_bucket, db_config, output_dir)
 
