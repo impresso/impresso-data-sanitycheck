@@ -4,17 +4,29 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-impresso_commons = {git = "https://github.com/impresso/impresso-pycommons.git",editable = true}
 docopt = "*"
 humanize = "*"
 aenum = "*"
 requests = "*"
 tqdm = "*"
+distributed = "==2.3.2"
+dask = {extras = ["complete"],version = "==2.3.0"}
 impresso-db = {editable = true,path = "./../impresso-master-db"}
-dask = {extras = ["complete"],version = "*"}
+dkpro-pycas-0-1-1a = {editable = true,git = "https://github.com/dkpro/dkpro-pycas.git"}
+dask-k8 = {editable = true,git = "https://github.com/impresso/dask_k8.git"}
+impresso-commons = {editable = true,path = "./../impresso-pycommons"}
+sanity-check = {editable = true,path = "."}
+seaborn = "*"
+tabulate = "*"
 
 [dev-packages]
 jupyter = "*"
+flake8 = "*"
+isort = "*"
+black = "*"
 
 [requires]
 python_version = "3.6"
+
+[pipenv]
+allow_prereleases = true

@@ -3,7 +3,7 @@
 import os
 from setuptools import setup, find_packages
 
-VERSION = "0.1.1"
+VERSION = "0.2.0"
 
 
 DESCRIPTION = "Python module for data sanity check."
@@ -15,6 +15,7 @@ setup(
     url='https://github.com/impresso/impresso-data-sanitycheck',
     version=VERSION,
     packages=find_packages(),
-    long_description=DESCRIPTION, install_requires=['docopt', 'humanize']
+    long_description=DESCRIPTION,
+    install_requires=['docopt', 'humanize']
     # install_requires=[]
 )
