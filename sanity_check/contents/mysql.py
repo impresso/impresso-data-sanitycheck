@@ -52,9 +52,10 @@ def list_content_items(db_config=None):
     from impresso_db.base import engine
 
     with engine.connect() as db_conn:
+        print(f'Fetching content item IDs from MySQL DB {config}')
         q = "SELECT id FROM content_items;"
         mysql_ids = db_conn.execute(q)
 
     ci_ids = [db_id[0] for db_id in mysql_ids]
-    print(f'Fetched {len(ci_ids)} content item IDs from DB')
+    print(f'Fetched {len(ci_ids)} IDs.')
     return ci_ids

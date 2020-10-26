@@ -2,7 +2,7 @@
 
 Usage:
     stats.py s3 --input-bucket=<ib> --output-dir=<od> [--id-field=<id> --k8-memory=<mem> --k8-workers=<wkrs>]
-    stats.py mysql --db-config=<dbcfg> --output-dir=<od>
+    stats.py mysql --db-config=<dbcfg> --output-dir=<od> [--k8-memory=<mem> --k8-workers=<wkrs>]
     stats.py corpus --canonical-bucket=<cb> --rebuilt-bucket=<rb> --db-config=<db> --output-dir=<od> --output-bucket=<ob> [--k8-memory=<mem> --k8-workers=<wkrs>]
 
 Options:
@@ -32,6 +32,7 @@ from impresso_commons.utils.kube import (
     make_worker_configuration,
 )
 from sanity_check.contents.mysql import list_issues as mysql_list_issues
+from sanity_check.contents.mysql import list_content_items as mysql_list_content_items
 from sanity_check.contents.s3_data import fetch_issue_ids, fetch_issue_ids_rebuilt, fetch_issues
 
 
@@ -243,7 +244,7 @@ def compute_corpus_stats(s3_canonical_bucket: str, s3_rebuilt_bucket: str, db_co
     corpus_stats_df.to_csv(os.path.join(output_dir, 'newspaper_stats.csv'))
 
 
-def compute_content_items_stats(s3_input_bucket: str, output_dir: str, id_field: str = 'id') -> None:
+def compute_content_items_stats(s3_input_bucket: str, output_dir: str, id_field: str = 'id') -> pd.DataFrame:
     """Computes the number of content items per newspaper per year in a given s3 bucket.
 
     This function can be used on any s3 bucket containing ``.bz2``-compressed JSON-line files, provided that
@@ -251,8 +252,9 @@ def compute_content_items_stats(s3_input_bucket: str, output_dir: str, id_field:
 
     :param str s3_input_bucket: Name of input s3 bucket (starting with ``s3://``)
     :param str output_dir: Path of output directory.
-    :return: Description of returned object.
-    :rtype: None
+    :param str id_field: Name of the field to be used an the id (default ``id``).
+    :return: A dataframe with content item stats.
+    :rtype: pd.DataFrame
 
     """
     csv_output_file = os.path.join(output_dir, "ci_stats.csv")
@@ -300,6 +302,38 @@ def compute_content_items_stats(s3_input_bucket: str, output_dir: str, id_field:
     df.to_pickle(pickle_output_file)
     print(f'CSV output written to {csv_output_file}')
     print(f'Pickle output written to {pickle_output_file}')
+    return df
+
+
+def compute_mysql_stats(db_config: str, output_dir: str) -> pd.DataFrame:
+    ci_bag = db.from_sequence(mysql_list_content_items(db_config))
+
+    ci_ddf = (
+        ci_bag.map(lambda ci: {'id': ci, 'newspaper': ci.split('-')[0], 'year': ci.split('-')[1]})
+        .to_dataframe()
+        .set_index('id')
+        .persist()
+    )
+
+    cis_grouped = ci_ddf.groupby(by=['newspaper', 'year']).size().compute()
+
+    df = pd.DataFrame(cis_grouped)
+    df.reset_index(inplace=True)
+    df["id"] = df.apply(lambda x: f"{x.newspaper}-{x.year}", axis=1)
+    df.set_index('id', inplace=True)
+    df.columns = ['newspaper', 'year', 'count']
+    df["mysql"] = True
+    df["mysql_db"] = db_config
+
+    filename = f"contentitems_mysql-{db_config}"
+
+    csv_path = os.path.join(output_dir, f"{filename}.csv")
+    df[['count']].to_csv(csv_path)
+    print(f"Written CSV file to {csv_path}")
+
+    pickle_path = os.path.join(output_dir, f"{filename}.pkl")
+    df.to_pickle(pickle_path)
+    print(f"Written pickle file to {pickle_path}")
     return df
 
 
@@ -356,7 +390,7 @@ def main():
         print(dask_client)
 
         if db_stats:
-            print("Not implemented yet!")
+            compute_mysql_stats(db_config, output_dir)
         elif s3_stats:
             if id_field:
                 compute_content_items_stats(s3_input_bucket, output_dir, id_field)

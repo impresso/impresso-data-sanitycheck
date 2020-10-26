@@ -27,6 +27,8 @@ import pandas as pd
 from dask import bag
 import os
 
+OUTPUT_SEPARATOR = "\n#####"
+
 
 def check_duplicated_content_item_IDs(issue_bag: bag.Bag) -> pd.DataFrame:
     """Short summary.
@@ -44,9 +46,7 @@ def check_duplicated_content_item_IDs(issue_bag: bag.Bag) -> pd.DataFrame:
         .flatten()
         .frequencies()
         .filter(lambda i: i[1] > 1)
-        .map(
-            lambda i: {"ci_id": i[0], "freq": i[1], "newspaper_id": i[0].split("-")[0]}
-        )
+        .map(lambda i: {"ci_id": i[0], "freq": i[1], "newspaper_id": i[0].split("-")[0]})
         .compute()
     )
 
@@ -102,52 +102,75 @@ def check_inconsistent_page_ids(canonical_bucket_name: str) -> pd.DataFrame:
     page_ids_from_pages = fetch_page_ids(canonical_bucket_name, source="pages")
 
     df_page_ids_from_issues = (
-        page_ids_from_issues.map(lambda id: {"id": id, "from_issues": True})
-        .to_dataframe()
-        .set_index("id")
-        .persist()
+        page_ids_from_issues.map(lambda id: {"id": id, "from_issues": True}).to_dataframe().set_index("id").persist()
     )
 
     df_page_ids_from_pages = (
-        page_ids_from_pages.map(lambda id: {"id": id, "from_pages": True})
-        .to_dataframe()
-        .set_index("id")
-        .persist()
+        page_ids_from_pages.map(lambda id: {"id": id, "from_pages": True}).to_dataframe().set_index("id").persist()
     )
 
-    df_pages = df_page_ids_from_issues.join(
-        df_page_ids_from_pages, how="outer"
-    ).compute()
+    df_pages = df_page_ids_from_issues.join(df_page_ids_from_pages, how="outer").compute()
 
     df_pages["newspaper_id"] = df_pages.index.map(lambda z: z.split("-")[0])
     return df_pages[~(df_pages.from_pages == df_pages.from_issues)]
 
 
 def run_checks_canonical(canonical_bucket_name, output_dir=None):
-    canonical_issues_bag = fetch_issues(canonical_bucket_name, compute=False).filter(
-        lambda i: len(i) > 0
-    )
+    canonical_issues_bag = fetch_issues(canonical_bucket_name, compute=False).filter(lambda i: len(i) > 0)
 
     # 1) verify that there are not duplicated issue IDs
+    print(OUTPUT_SEPARATOR)
+    print('Verifying existence of duplicated issue IDs...')
     duplicated_issues_df = check_duplicated_issues_IDs(canonical_issues_bag)
+    print('Done')
     if output_dir and os.path.exists(output_dir):
         fname = "duplicate_issue_ids"
-        duplicated_issues_df.to_pickle(os.path.join(output_dir, f"{fname}.pkl"))
-        duplicated_issues_df.to_csv(os.path.join(output_dir, f"{fname}.csv"))
+        pickle_path = os.path.join(output_dir, f"{fname}.pkl")
+        csv_path = os.path.join(output_dir, f"{fname}.csv")
+
+        duplicated_issues_df.to_pickle(pickle_path)
+        print(f"Written pickle file to {pickle_path}")
+
+        duplicated_issues_df.to_csv(csv_path)
+        print(f"Written CSV output to {csv_path}")
+    elif os.path.exists(output_dir) is False:
+        print(f"No outputs written as folder {output_dir} does not exist.")
 
     # 2) verify that there are not duplicated content item IDs
+    print(OUTPUT_SEPARATOR)
+    print('Verifying existence of duplicated content item IDs...')
     duplicates_df = check_duplicated_content_item_IDs(canonical_issues_bag)
     if output_dir and os.path.exists(output_dir):
         fname = "duplicate_ci_ids"
-        duplicates_df.to_pickle(os.path.join(output_dir, f"{fname}.pkl"))
-        duplicates_df.to_csv(os.path.join(output_dir, f"{fname}.csv"))
+        pickle_path = os.path.join(output_dir, f"{fname}.pkl")
+        csv_path = os.path.join(output_dir, f"{fname}.csv")
+
+        duplicates_df.to_pickle(pickle_path)
+        print(f"Written pickle file to {pickle_path}")
+
+        duplicates_df.to_csv(csv_path)
+        print(f"Written CSV output to {csv_path}")
+    elif os.path.exists(output_dir) is False:
+        print(f"No outputs written as folder {output_dir} does not exist.")
+    print('Done')
 
     # 3) verify the consistency of page IDs
+    print(OUTPUT_SEPARATOR)
+    print('Verifying integrity of page IDs...')
     inconsistencies_df = check_inconsistent_page_ids(canonical_bucket_name)
     if output_dir and os.path.exists(output_dir):
         fname = "inconsistent_page_ids"
-        inconsistencies_df.to_pickle(os.path.join(output_dir, f"{fname}.pkl"))
-        inconsistencies_df.to_csv(os.path.join(output_dir, f"{fname}.csv"))
+        pickle_path = os.path.join(output_dir, f"{fname}.pkl")
+        csv_path = os.path.join(output_dir, f"{fname}.csv")
+
+        inconsistencies_df.to_pickle(pickle_path)
+        print(f"Written pickle file to {pickle_path}")
+
+        inconsistencies_df.to_csv(csv_path)
+        print(f"Written CSV output to {csv_path}")
+    elif os.path.exists(output_dir) is False:
+        print(f"No outputs written as folder {output_dir} does not exist.")
+    print('Done')
 
     # TODO: at this point output a list of newspaper that can be moved
     # to staging
@@ -170,14 +193,16 @@ def main():
             namespace="dhlab",
             cluster_id="impresso-sanitycheck-cli",
             scheduler_pod_spec=make_scheduler_configuration(),
-            worker_pod_spec=make_worker_configuration(
-                docker_image=image_uri, memory=memory
-            ),
+            worker_pod_spec=make_worker_configuration(docker_image=image_uri, memory=memory),
         )
         cluster.create()
         cluster.scale(workers, blocking=True)
         dask_client = cluster.make_dask_client()
-        dask_client.get_versions(check=True)
+
+        # NB here we check that scheduler and workers do have the same
+        # versions of the various libraries, as mismatches may cause
+        # exceptions and weird behaviours.
+        libraries_versions = dask_client.get_versions(check=True)
         print(dask_client)
         run_checks_canonical(s3_canonical_bucket, output_dir)
 
