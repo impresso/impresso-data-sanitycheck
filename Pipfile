@@ -10,11 +10,10 @@ aenum = "*"
 requests = "*"
 tqdm = "*"
 distributed = "==2.3.2"
-dask = {extras = ["complete"],version = "==2.3.0"}
+dask = {extras = ["complete"]}
 impresso-db = {editable = true,path = "./../impresso-master-db"}
-dkpro-pycas-0-1-1a = {editable = true,git = "https://github.com/dkpro/dkpro-pycas.git"}
-dask-k8 = {editable = true,git = "https://github.com/impresso/dask_k8.git"}
-impresso-commons = {editable = true,path = "./../impresso-pycommons"}
+dask-k8 = "*"
+impresso-pycommons = "*"
 sanity-check = {editable = true,path = "."}
 seaborn = "*"
 tabulate = "*"
