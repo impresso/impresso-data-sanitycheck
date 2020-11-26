@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 
 
 DESCRIPTION = "Python module for data sanity check."
@@ -22,12 +22,13 @@ setup(
         'aenum',
         'requests',
         'tqdm',
-        'distributed==2.3.2',
+        'distributed',
         'dask[complete]',
         'seaborn',
         'tabulate',
         'dask-k8',
         'impresso-pycommons'
+        'impresso-text-importer'
     ],
     dependency_links=[
         'https://github.com/impresso/impresso-master-db/tarball/master#egg=package-1.0'
